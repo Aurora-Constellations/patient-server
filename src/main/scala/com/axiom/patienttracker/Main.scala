@@ -6,6 +6,7 @@ import zio.*
 import zio.http.Server
 import com.axiom.patienttracker.http.controllers.PatientController
 import com.axiom.patienttracker.http.HttpApi
+import com.axiom.patienttracker.services.PatientService
 
 object Main extends ZIOAppDefault:
 
@@ -19,5 +20,6 @@ object Main extends ZIOAppDefault:
   } yield ()
   override def run =
     serverProgram.provide(
-      Server.default
+      Server.default,
+      PatientService.dummyLayer
     )

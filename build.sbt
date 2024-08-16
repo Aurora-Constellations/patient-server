@@ -19,6 +19,11 @@ lazy val root = project
 
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server" % tapirVersion,
 
+    // libraryDependencies += "dev.zio" %% "zio-test" % "2.1.6" % Test,
+    // https://mvnrepository.com/artifact/com.softwaremill.sttp.client3/core
+    // libraryDependencies += "com.softwaremill.sttp.client3" %% "core" % "3.9.8",
 
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % Test,
+    libraryDependencies += "dev.zio" %% "zio-test-sbt" % "2.1.6" % Test,
     libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
   )

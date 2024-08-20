@@ -6,7 +6,11 @@ import zio.*
 import zio.http.Server
 import com.axiom.patienttracker.http.controllers.PatientController
 import com.axiom.patienttracker.http.HttpApi
-import com.axiom.patienttracker.services.PatientService
+import com.axiom.patienttracker.services.*
+import com.axiom.patienttracker.repositories.PatientRepositoryLive
+import com.axiom.patienttracker.repositories.Repository
+import com.axiom.patienttracker.repositories.ReportRepositoryLive
+
 
 object Main extends ZIOAppDefault:
 
@@ -21,5 +25,12 @@ object Main extends ZIOAppDefault:
   override def run =
     serverProgram.provide(
       Server.default,
-      PatientService.dummyLayer
+      //service
+      PatientServiceLive.layer,
+      ReportServiceLive.layer,
+      // repo dependency
+      PatientRepositoryLive.layer,
+      ReportRepositoryLive.layer,
+      // postgres dependency, qill layer
+      Repository.dataLayer
     )

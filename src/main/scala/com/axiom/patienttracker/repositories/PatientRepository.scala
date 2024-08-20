@@ -72,27 +72,3 @@ object PatientRepositoryLive:
     val layer = ZLayer {
         ZIO.service[Quill.Postgres[SnakeCase]].map(quill => PatientRepositoryLive(quill))
     }
-
-
-import java.time.format.DateTimeFormatter
-import java.time.LocalDate
-
-object PatientRepositoryDemo extends ZIOAppDefault:
-
-    def stringToDate(dateString: String) =
-        val pattern = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        val date = LocalDate.parse(dateString, pattern) //returns yyyy-MM-dd
-        date
-
-    val program = for{
-        repo <- ZIO.service[PatientRepository]
-        _ <- repo.create(Patient(-1L, "456", "rock", "the jvm", "male", stringToDate("2024-08-16")))
-    }yield ()
-
-    override def run: ZIO[Any & (ZIOAppArgs & Scope), Any, Any] = 
-        program.provide(
-            PatientRepositoryLive.layer,
-            Quill.Postgres.fromNamingStrategy(SnakeCase), //quill instance
-            Quill.DataSource.fromPrefix("patienttrackerdb")
-        )
-    

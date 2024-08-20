@@ -6,7 +6,7 @@ import sttp.tapir.generic.auto.* // imports the type class of derivation package
 import com.axiom.patienttracker.http.requests.CreatePatientRequest
 import com.axiom.patienttracker.domain.data.Patient
 
-trait PatientEndpoints {
+trait PatientEndpoints:
   val patientEndpoint = endpoint
     .tag("patient")
     .name("patient")
@@ -35,8 +35,7 @@ trait PatientEndpoints {
   val getByIdEndpoint = endpoint
     .tag("patients")
     .name("getById")
-    .description("get patient by id (or maybe by unitNumber?)") //TODO
+    .description("get patient by id (or maybe by unitNumber?)") //getting by id if converts to long or else get by unit number
     .in("patients" / path[String]("id"))
     .get
     .out(jsonBody[Option[Patient]])
-}

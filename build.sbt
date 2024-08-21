@@ -4,6 +4,7 @@ val tapirVersion = "1.11.1"
 val quillVersion = "4.8.5"
 val postgresVersion = "42.5.0"
 val zioConfigVersion  = "3.0.7"
+val sttpVersion = "3.8.8"
 
 lazy val root = project
   .in(file("."))
@@ -24,11 +25,13 @@ lazy val root = project
     libraryDependencies += "io.getquill" %% "quill-jdbc-zio" % quillVersion,
     libraryDependencies += "io.getquill" %% "quill-jdbc" % quillVersion,
 
-    libraryDependencies += "dev.zio"                       %% "zio-config"                        % zioConfigVersion,
-    libraryDependencies += "dev.zio"                       %% "zio-config-magnolia"               % zioConfigVersion,
-    libraryDependencies += "dev.zio"                       %% "zio-config-typesafe"               % zioConfigVersion,
+    libraryDependencies += "dev.zio" %% "zio-config"  % zioConfigVersion,
+    libraryDependencies += "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
+    libraryDependencies += "dev.zio" %% "zio-config-typesafe" % zioConfigVersion,
 
     libraryDependencies += "org.postgresql" % "postgresql" % postgresVersion,
+
+    libraryDependencies += "com.softwaremill.sttp.client3" %% "zio" % sttpVersion % Test,
 
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % Test,
     libraryDependencies += "dev.zio" %% "zio-test-sbt" % "2.1.6" % Test,

@@ -36,5 +36,5 @@ CREATE TABLE IF NOT EXISTS reports (
     has_hypertension BOOLEAN,
     glucose_level TEXT NOT NULL,
     glycated_hemoglobin TEXT NOT NULL,
-    has_diabetes BOOLEAN,
+    has_diabetes BOOLEAN
 );

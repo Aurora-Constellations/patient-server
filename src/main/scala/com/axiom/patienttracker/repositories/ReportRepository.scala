@@ -10,6 +10,7 @@ trait ReportRepository:
     def getById(id: Long): Task[Option[Report]]
     def getByPatientId(id: Long): Task[List[Report]]
     def getByUnitNumber(unitNumber: String): Task[List[Report]]
+    def getAll(): Task[List[Report]]
     //TODO get all patient reported with diabetes or hypertension
     def update(id: Long, op: Report => Report): Task[Report]
     def delete(id: Long): Task[Report]
@@ -26,6 +27,11 @@ class ReportRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends ReportRepos
             query[Report]
                 .insertValue(lift(report))
                 .returning(r => r)
+        }
+    
+    override def getAll(): Task[List[Report]] = 
+        run{
+            query[Report]
         }
 
     override def getById(id: Long): Task[Option[Report]] = 
@@ -47,7 +53,7 @@ class ReportRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends ReportRepos
         }
     override def update(id: Long, op: Report => Report): Task[Report] = 
         for{
-            current <- getById(id).someOrFail(new RuntimeException(s"Could not update: missing id: $id"))
+            current <- getById(id).someOrFail(new RuntimeException(s"Could not update report: missing id: $id"))
             updated <- run{
                 query[Report]
                     .updateValue(lift(op(current)))

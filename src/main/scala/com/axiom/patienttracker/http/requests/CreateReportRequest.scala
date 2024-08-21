@@ -9,10 +9,10 @@ final case class CreateReportRequest(
     unitNumber: String,
     systolicPressure: Int,
     diastolicPressure: Int,
-    hasHypertension: Boolean,
+    hasHypertension: Option[Boolean] = None,
     glucoseLevel: Double,
     glycatedHemoglobin: Double,
-    hasDiabetes: Boolean,
+    hasDiabetes: Option[Boolean] = None,
 ):
     def toReport(id: Long) =
         Report(id, patientId, unitNumber, systolicPressure, diastolicPressure, CreateReportRequest.calcHypertension(systolicPressure, diastolicPressure), glucoseLevel, glycatedHemoglobin, CreateReportRequest.calcDiabetes(glucoseLevel, glycatedHemoglobin))

@@ -32,6 +32,7 @@ lazy val root = project
     libraryDependencies += "org.postgresql" % "postgresql" % postgresVersion,
 
     libraryDependencies += "com.softwaremill.sttp.client3" %% "zio" % sttpVersion % Test,
+    libraryDependencies += "io.github.scottweaver" %% "zio-2-0-testcontainers-postgresql" % "0.9.0" % Test,
 
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % Test,
     libraryDependencies += "dev.zio" %% "zio-test-sbt" % "2.1.6" % Test,

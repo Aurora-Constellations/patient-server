@@ -22,10 +22,18 @@ import com.axiom.patienttracker.repositories.PatientRepositoryLive
 import com.axiom.patienttracker.repositories.Repository
 
 import com.axiom.patienttracker.syntax.*
+import com.axiom.patienttracker.services.PatientService
 
 object PatientControllerSpec extends ZIOSpecDefault:
     // building MonadErro by ourselves
     private given zioME: MonadError[Task] = new RIOMonadError[Any]// ZIO monad error
+
+    private val serviceStub = new PatientService {
+        override def create(req: CreatePatientRequest): Task[Patient] = ???
+        override def getAll: Task[List[Patient]] = ???
+        override def getById(id: Long): Task[Option[Patient]] = ???
+        override def getByUnitNumber(unitNumber: String): Task[Option[Patient]] = ???
+    }
 
     def stringToDate(dateString: String) =
         val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -62,9 +70,9 @@ object PatientControllerSpec extends ZIOSpecDefault:
                 
                 // inspect http response
                 program.assert{    
-                        respBody =>
-                            respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
-                                .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
+                    respBody =>
+                        respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
+                            .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
                 }
             ,
             test("Get all Patients"):
@@ -75,9 +83,9 @@ object PatientControllerSpec extends ZIOSpecDefault:
                     .send(backendStub)
                 } yield response.body
                 program.assert{    
-                        respBody =>
-                            respBody.toOption.flatMap(_.fromJson[List[Patient]].toOption) //Option[Patient]
-                                .contains(List())
+                    respBody =>
+                        respBody.toOption.flatMap(_.fromJson[List[Patient]].toOption) //Option[Patient]
+                            .contains(List())
                 }
             ,
             test("Get Patients by id"):
@@ -88,12 +96,10 @@ object PatientControllerSpec extends ZIOSpecDefault:
                     .send(backendStub)
                 } yield response.body
                 program.assert{    
-                        respBody =>
-                            respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
-                                .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
+                    respBody =>
+                        respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
+                            .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
                 }
         ).provide(
-                PatientServiceLive.layer,
-                PatientRepositoryLive.layer,
-                Repository.dataLayer
+                ZLayer.succeed(serviceStub)
         )

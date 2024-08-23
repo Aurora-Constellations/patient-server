@@ -3,7 +3,7 @@ CREATE DATABASE patienttracker;
 
 CREATE TABLE IF NOT EXISTS patients (
     id BIGSERIAL PRIMARY KEY,
-    unit_number TEXT NOT NULL,
+    unit_number TEXT UNIQUE NOT NULL,
     last_name TEXT NOT NULL,
     first_name TEXT NOT NULL,
     sex TEXT NOT NULL,

@@ -11,21 +11,21 @@ class ReportController private (service: ReportService) extends BaseController w
         .serverLogicSuccess[Task](_ => ZIO.succeed("Hey reports!"))
 
     val create: ServerEndpoint[Any, Task] = createEndpoint
-        .serverLogicSuccess(req =>
-            service.create(req))
+        .serverLogic(req =>
+            service.create(req).either)
 
     val getAll: ServerEndpoint[Any, Task] = getAllEndpoint
-        .serverLogicSuccess(req =>
-            service.getAll())
+        .serverLogic(req =>
+            service.getAll().either)
 
     val getById: ServerEndpoint[Any, Task] = getByIdEndpoint
-        .serverLogicSuccess( id =>
-            service.getById(id)
+        .serverLogic( id =>
+            service.getById(id).either
         )
     
     val getByUnitNumber: ServerEndpoint[Any, Task] = getByUnitNumberEndpoint
-        .serverLogicSuccess( unitNumber => 
-            service.getByUnitNumber(unitNumber))
+        .serverLogic( unitNumber => 
+            service.getByUnitNumber(unitNumber).either)
     override val routes: List[ServerEndpoint[Any, Task]] = List(create, getAll, getById, getByUnitNumber)
 
 object ReportController:

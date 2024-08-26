@@ -6,8 +6,8 @@ import sttp.tapir.generic.auto.* // imports the type class of derivation package
 import com.axiom.patienttracker.domain.data.Report
 import com.axiom.patienttracker.http.requests.CreateReportRequest
 
-trait ReportEndpoints:
-    val reportEndpoint = endpoint
+trait ReportEndpoints extends BaseEndpoint:
+    val reportEndpoint = baseEndpoint
         .tag("report")
         .name("report")
         .description("patient reports")
@@ -15,7 +15,7 @@ trait ReportEndpoints:
         .in("report")
         .out(plainBody[String])
 
-    val createEndpoint = endpoint
+    val createEndpoint = baseEndpoint
         .tag("reports")
         .name("reports")
         .description("create a new patient report")
@@ -24,7 +24,7 @@ trait ReportEndpoints:
         .in(jsonBody[CreateReportRequest])
         .out(jsonBody[Report])
 
-    val getAllEndpoint = endpoint
+    val getAllEndpoint = baseEndpoint
         .tag("reports")
         .name("reports")
         .description("get all the reports")
@@ -32,7 +32,7 @@ trait ReportEndpoints:
         .in("reports")
         .out(jsonBody[List[Report]])
     
-    val getByIdEndpoint = endpoint
+    val getByIdEndpoint = baseEndpoint
         .tag("reports")
         .name("reports")
         .description("get reports by id")
@@ -40,7 +40,7 @@ trait ReportEndpoints:
         .get
         .out(jsonBody[Option[Report]])
 
-    val getByUnitNumberEndpoint = endpoint
+    val getByUnitNumberEndpoint = baseEndpoint
         .tag("reports")
         .name("reports")
         .description("get patient report by unit number")

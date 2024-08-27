@@ -6,12 +6,15 @@ import com.axiom.patienttracker.repositories.UserRepository
 import java.security.SecureRandom
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
+import com.axiom.patienttracker.domain.data.UserToken
 
 trait UserService:
     def registerUser(email: String, password: String): Task[User]
     def verifyPassword(email: String, password: String): Task[Boolean]
+    //JWT
+    def generateToken(email: String, password: String): Task[Option[UserToken]]
 
-class UserServiceLive private (userRepo: UserRepository) extends UserService:
+class UserServiceLive private (jwtService: JWTService, userRepo: UserRepository) extends UserService:
     override def registerUser(email: String, password: String): Task[User] = 
         userRepo.create(
             User(
@@ -28,11 +31,21 @@ class UserServiceLive private (userRepo: UserRepository) extends UserService:
             )
         } yield result
 
+    override def generateToken(email: String, password: String): Task[Option[UserToken]] = 
+        for{
+            existingUser <- userRepo.getByEmail(email).someOrFail(new RuntimeException(s"Cannot verify the email: $email"))
+            verified <- ZIO.attempt(
+                UserServiceLive.Hasher.validateHash(password, existingUser.hashedPassword)
+            )
+            maybeToken <- jwtService.createToken(existingUser).when(verified)
+        }yield maybeToken
+
 object UserServiceLive:
     val layer = ZLayer{
         for{
+            jwtService <- ZIO.service[JWTService]
             repo <- ZIO.service[UserRepository]
-        }yield new UserServiceLive(repo)
+        }yield new UserServiceLive(jwtService, repo)
     }
 
     object Hasher:

@@ -30,6 +30,8 @@ lazy val root = project
     libraryDependencies += "dev.zio" %% "zio-config-typesafe" % zioConfigVersion,
 
     libraryDependencies += "org.postgresql" % "postgresql" % postgresVersion,
+    libraryDependencies += "com.auth0" % "java-jwt" % "4.4.0",
+
 
     libraryDependencies += "com.softwaremill.sttp.client3" %% "zio" % sttpVersion % Test,
     libraryDependencies += "io.github.scottweaver" %% "zio-2-0-testcontainers-postgresql" % "0.9.0" % Test,

@@ -27,10 +27,14 @@ class UserServiceLive private (jwtService: JWTService, userRepo: UserRepository)
         )
     override def verifyPassword(email: String, password: String): Task[Boolean] = 
         for{
-            existingUser <- userRepo.getByEmail(email).someOrFail(new RuntimeException(s"Cannot verify the email: $email"))
-            result <- ZIO.attempt(
-                UserServiceLive.Hasher.validateHash(password, existingUser.hashedPassword)
-            )
+            existingUser <- userRepo.getByEmail(email)
+            result <- existingUser match
+                case Some(user) => 
+                    ZIO.attempt(
+                            UserServiceLive.Hasher.validateHash(password, user.hashedPassword)
+                        )
+                        .orElseSucceed(false)
+                case None => ZIO.succeed(false)
         } yield result
     
     override def updatePassword(email: String, oldPassword: String, newPassword: String): Task[User] = 

@@ -7,10 +7,11 @@ object HttpApi:
         controllers.flatMap(_.routes)
 
     def makeControllers = for {
-        patient <- PatientController.makeZIO
-        report <- ReportController.makeZIO
+        patients <- PatientController.makeZIO
+        reports <- ReportController.makeZIO
+        users <- UserController.makeZIO
         // Keep adding controllers here
-    } yield List(patient, report)
+    } yield List(patients, reports, users)
 
     val endpointsZIO = makeControllers.map(gatherRoutes)
 

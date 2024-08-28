@@ -8,7 +8,7 @@ object Repository:
         Quill.Postgres.fromNamingStrategy(SnakeCase) //quill instance
 
     def dataSourceLayer = 
-        Quill.DataSource.fromPrefix("patienttrackerdb")
+        Quill.DataSource.fromPrefix("patienttracker.db")
 
     val dataLayer = 
         dataSourceLayer >>> quillLayer

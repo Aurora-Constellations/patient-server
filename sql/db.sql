@@ -38,3 +38,9 @@ CREATE TABLE IF NOT EXISTS reports (
     glycated_hemoglobin TEXT NOT NULL,
     has_diabetes BOOLEAN
 );
+
+CREATE TABLE IF NOT EXISTS users (
+    id BIGSERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    hashed_password TEXT NOT NULL
+);

@@ -67,7 +67,7 @@ object JWTServiceLive:
     // ZLayer.succeed(JWTConfig("secret", 30 * 24 * 3600))
     // from application.conf -> turns into case class -> turns the ZLayer
     // >>> -> it feeds the config layer to layer
-    val configuredLayer = Configs.makeLayer[JWTConfig]("patienttrackerdb.jwt") >>> layer 
+    val configuredLayer = Configs.makeLayer[JWTConfig]("patienttracker.jwt") >>> layer 
 
 object JWTServiceDemo extends ZIOAppDefault:
     val program = for{

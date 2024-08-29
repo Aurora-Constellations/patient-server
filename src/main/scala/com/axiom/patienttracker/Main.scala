@@ -30,13 +30,11 @@ object Main extends ZIOAppDefault:
   override def run =
     serverProgram.provide(
       Server.default,
-      //configs
-      Configs.makeLayer[JWTConfig]("patienttracker.jwt"),
       //service
       PatientServiceLive.layer,
       ReportServiceLive.layer,
       UserServiceLive.layer,
-      JWTServiceLive.layer,
+      JWTServiceLive.configuredLayer,
       EmailServiceLive.layer,
       // repo dependency
       PatientRepositoryLive.layer,

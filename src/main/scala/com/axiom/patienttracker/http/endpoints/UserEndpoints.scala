@@ -4,7 +4,7 @@ import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 
-import com.axiom.patienttracker.http.requests.{RegisterUserAccount ,UpdatePasswordRequest, DeleteAccountRequest, LoginRequest}
+import com.axiom.patienttracker.http.requests.*
 import com.axiom.patienttracker.http.responses.UserResponse
 import com.axiom.patienttracker.domain.data.UserToken
 
@@ -46,3 +46,19 @@ trait UserEndpoints extends BaseEndpoint:
         .post
         .in(jsonBody[LoginRequest])
         .out(jsonBody[UserToken])
+
+    val forgotPasswordEndpoint = baseEndpoint
+        .tag("users")
+        .name("forgot password")
+        .description("Trigger email for password recovery")
+        .in("users" / "forgot")
+        .post
+        .in(jsonBody[ForgotPasswordRequest])
+    
+    val recoverPasswordEndpoint = baseEndpoint
+        .tag("users")
+        .name("recover password")
+        .description("Set new password based on OTP")
+        .in("users" / "recover")
+        .post
+        .in(jsonBody[RecoverPasswordRequest])

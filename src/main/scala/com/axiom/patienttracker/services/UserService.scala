@@ -1,12 +1,15 @@
 package com.axiom.patienttracker.services
 
 import zio.*
-import com.axiom.patienttracker.domain.data.User
-import com.axiom.patienttracker.repositories.UserRepository
+
 import java.security.SecureRandom
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
+
+import com.axiom.patienttracker.domain.data.User
+import com.axiom.patienttracker.repositories.UserRepository
 import com.axiom.patienttracker.domain.data.UserToken
+import com.axiom.patienttracker.repositories.RecoveryTokensRepository
 
 trait UserService:
     def registerUser(email: String, password: String): Task[User]
@@ -15,8 +18,15 @@ trait UserService:
     def deleteUser(email: String, password: String): Task[User]
     //JWT
     def generateToken(email: String, password: String): Task[Option[UserToken]]
+    //password recovery flow
+    def sendPasswordRecoveryToken(email: String): Task[Unit]
+    def recoverPasswordFromToken(email: String, token: String, newPassword: String): Task[Boolean]
 
-class UserServiceLive private (jwtService: JWTService, userRepo: UserRepository) extends UserService:
+class UserServiceLive private (
+    jwtService: JWTService, 
+    emailService: EmailService, 
+    userRepo: UserRepository,
+    tokenRepo: RecoveryTokensRepository) extends UserService:
     override def registerUser(email: String, password: String): Task[User] = 
         userRepo.create(
             User(
@@ -70,13 +80,33 @@ class UserServiceLive private (jwtService: JWTService, userRepo: UserRepository)
             )
             maybeToken <- jwtService.createToken(existingUser).when(verified)
         }yield maybeToken
+    
+    override def sendPasswordRecoveryToken(email: String): Task[Unit] = 
+        //get a token from repo
+        tokenRepo.getToken(email).flatMap{
+            //email the token to the provided email address
+            case Some(token) => emailService.sendPasswordRecoveryEmail(email, token)
+            case None => ZIO.unit
+        }
+
+    override def recoverPasswordFromToken(email: String, token: String, newPassword: String): Task[Boolean] = 
+        for{
+            existingUser <- userRepo.getByEmail(email).someOrFail(new RuntimeException(s"User does not exist"))
+            tokenIsValid <- tokenRepo.checkToken(email, token)
+            result <- userRepo
+                .update(existingUser.id, user => user.copy(hashedPassword = UserServiceLive.Hasher.generateHash(newPassword)))
+                .when(tokenIsValid)
+                .map(_.nonEmpty)
+        }yield result
 
 object UserServiceLive:
     val layer = ZLayer{
         for{
             jwtService <- ZIO.service[JWTService]
-            repo <- ZIO.service[UserRepository]
-        }yield new UserServiceLive(jwtService, repo)
+            emailService <- ZIO.service[EmailService]
+            userRepo <- ZIO.service[UserRepository]
+            tokenRepo <- ZIO.service[RecoveryTokensRepository]
+        }yield new UserServiceLive(jwtService, emailService, userRepo, tokenRepo)
     }
 
     object Hasher:

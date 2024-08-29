@@ -14,6 +14,7 @@ import com.axiom.patienttracker.repositories.UserRepositoryLive
 import com.axiom.patienttracker.config.Configs
 import com.axiom.patienttracker.config.JWTConfig
 import com.axiom.patienttracker.repositories.RecoveryTokensRepositoryLive
+import com.axiom.patienttracker.config.RecoveryTokensConfig
 
 
 object Main extends ZIOAppDefault:
@@ -41,7 +42,7 @@ object Main extends ZIOAppDefault:
       PatientRepositoryLive.layer,
       ReportRepositoryLive.layer,
       UserRepositoryLive.layer,
-      RecoveryTokensRepositoryLive.layer,
+      RecoveryTokensRepositoryLive.configuredLayer,
       // postgres dependency, qill layer
       Repository.dataLayer
     )

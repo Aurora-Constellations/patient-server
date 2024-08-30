@@ -35,7 +35,7 @@ object Main extends ZIOAppDefault:
       ReportServiceLive.layer,
       UserServiceLive.layer,
       JWTServiceLive.configuredLayer,
-      EmailServiceLive.layer,
+      EmailServiceLive.configuredLayer,
       // repo dependency
       PatientRepositoryLive.layer,
       ReportRepositoryLive.layer,

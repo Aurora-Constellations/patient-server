@@ -33,3 +33,7 @@ metals.sbt
 
 # Error Logs
 hs_err_pid4464.log
+
+
+# Application configurations
+./src/main/resources/application.conf

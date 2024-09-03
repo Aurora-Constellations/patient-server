@@ -5,6 +5,7 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.* // imports the type class of derivation package
 import com.axiom.patienttracker.http.requests.CreatePatientRequest
 import com.axiom.patienttracker.domain.data.Patient
+import com.axiom.patienttracker.http.requests.UpdatePatientRequest
 
 trait PatientEndpoints extends BaseEndpoint:
   val patientEndpoint = baseEndpoint
@@ -22,6 +23,15 @@ trait PatientEndpoints extends BaseEndpoint:
     .in("patients") //path
     .post
     .in(jsonBody[CreatePatientRequest])
+    .out(jsonBody[Patient])
+
+  val updateEndpoint = baseEndpoint
+    .tag("patients")
+    .name("update")
+    .description("update the patient details")
+    .in("patients" / "update" / path[Long]("id"))
+    .put
+    .in(jsonBody[UpdatePatientRequest])
     .out(jsonBody[Patient])
 
   val getAllEndpoint = baseEndpoint

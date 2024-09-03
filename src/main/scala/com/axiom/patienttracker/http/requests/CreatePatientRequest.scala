@@ -23,14 +23,14 @@ final case class CreatePatientRequest(
     postalCode: Option[String] = None,
     homePhoneNumber: Option[String] = None,
     workPhoneNumber: Option[String] = None,
-    OHIP: Option[String] = None,
+    ohip: Option[String] = None,
     familyPhysician: Option[String] = None,
     attending: Option[String] = None,
     collab1: Option[String] = None,
     collab2: Option[String] = None
 ):
     def toPatient(id: Long) =
-        Patient(id, unitNumber, lastName, firstName, sex, dob, hcn, family, famPriv, hosp, flag, address1, address2, city, province, postalCode, homePhoneNumber, workPhoneNumber, OHIP, familyPhysician, attending, collab1, collab2)
+        Patient(id, unitNumber, lastName, firstName, sex, dob, hcn, family, famPriv, hosp, flag, address1, address2, city, province, postalCode, homePhoneNumber, workPhoneNumber, ohip, familyPhysician, attending, collab1, collab2)
 
 object CreatePatientRequest:
     given codec: JsonCodec[CreatePatientRequest] = DeriveJsonCodec.gen[CreatePatientRequest]

@@ -50,6 +50,14 @@ trait PatientEndpoints extends BaseEndpoint:
     .get
     .out(jsonBody[Option[Patient]])
 
+  val deleteEndpoint = baseEndpoint
+    .tag("patients")
+    .name("delete")
+    .description("delete the patient record")
+    .delete
+    .in("patients" / "delete" / path[Long]("id"))
+    .out(jsonBody[Patient])
+
   val errorEndpoint = baseEndpoint
     .tag("patients")
     .name("error")

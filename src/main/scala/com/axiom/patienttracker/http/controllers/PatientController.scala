@@ -36,6 +36,10 @@ class PatientController private (service: PatientService) extends BaseController
             .either
     }
 
+    val delete: ServerEndpoint[Any, Task] = deleteEndpoint.serverLogic { id =>
+        service.delete(id).either
+    }
+
     val patient: ServerEndpoint[Any, Task] = patientEndpoint
         .serverLogicSuccess[Task](_ => ZIO.succeed("All set!"))
 
@@ -49,7 +53,7 @@ class PatientController private (service: PatientService) extends BaseController
          */
         .serverLogic[Task](_ => ZIO.fail(new RuntimeException("9/11 !!!")).either) //Task[Either[HttpError, String]] 
     
-    override val routes: List[ServerEndpoint[Any, Task]] = List(create, update, getAll, getById, errorRoute)
+    override val routes: List[ServerEndpoint[Any, Task]] = List(create, update, getAll, getById, delete, errorRoute)
 
 object PatientController:
     val makeZIO = for{

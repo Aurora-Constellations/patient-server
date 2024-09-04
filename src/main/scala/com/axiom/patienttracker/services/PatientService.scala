@@ -15,6 +15,7 @@ trait PatientService:
     def getAll: Task[List[Patient]]
     def getById(id: Long): Task[Option[Patient]]
     def getByUnitNumber(unitNumber: String): Task[Option[Patient]]
+    def delete(id: Long): Task[Patient]
 
 class PatientServiceLive private (repo: PatientRepository) extends PatientService:
 
@@ -57,6 +58,9 @@ class PatientServiceLive private (repo: PatientRepository) extends PatientServic
         repo.getById(id)
     override def getByUnitNumber(unitNumber: String): Task[Option[Patient]] = 
         repo.getByUnitNumber(unitNumber)
+
+    override def delete(id: Long): Task[Patient] = 
+        repo.delete(id)
 
 object PatientServiceLive:
     val layer = ZLayer{

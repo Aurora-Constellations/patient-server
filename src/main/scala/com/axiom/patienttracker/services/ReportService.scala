@@ -12,6 +12,7 @@ trait ReportService:
     def getByPatientId(id: Long): Task[List[Report]]
     def getByUnitNumber(unitNumber: String): Task[List[Report]]
     def getAll(): Task[List[Report]]
+    def delete(id: Long): Task[Report]
 
 class ReportServiceLive private (repo: ReportRepositoryLive) extends ReportService:
     override def create(report: CreateReportRequest): Task[Report] = 
@@ -24,6 +25,8 @@ class ReportServiceLive private (repo: ReportRepositoryLive) extends ReportServi
         repo.getByUnitNumber(unitNumber)
     override def getAll(): Task[List[Report]] = 
         repo.getAll()
+    override def delete(id: Long): Task[Report] = 
+        repo.delete(id)
 
 object ReportServiceLive:
     val layer = ZLayer{

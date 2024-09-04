@@ -47,3 +47,11 @@ trait ReportEndpoints extends BaseEndpoint:
         .in("reports" / "patients" / path[String]("unitNumber"))
         .get
         .out(jsonBody[List[Report]])
+
+    val deleteEndpoint = baseEndpoint
+        .tag("reports")
+        .name("delete")
+        .description("delete patinet report")
+        .in("reports" / "delete" / path[Long]("id"))
+        .delete
+        .out(jsonBody[Report])

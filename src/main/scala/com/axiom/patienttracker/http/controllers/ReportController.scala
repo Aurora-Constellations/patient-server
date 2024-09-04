@@ -26,7 +26,12 @@ class ReportController private (service: ReportService) extends BaseController w
     val getByUnitNumber: ServerEndpoint[Any, Task] = getByUnitNumberEndpoint
         .serverLogic( unitNumber => 
             service.getByUnitNumber(unitNumber).either)
-    override val routes: List[ServerEndpoint[Any, Task]] = List(create, getAll, getById, getByUnitNumber)
+
+    val delete: ServerEndpoint[Any, Task] = deleteEndpoint
+        .serverLogic( id => 
+            service.delete(id).either
+        )
+    override val routes: List[ServerEndpoint[Any, Task]] = List(create, getAll, getById, getByUnitNumber, delete)
 
 object ReportController:
     val makeZIO = ZIO.service[ReportService].map(service => new ReportController(service))

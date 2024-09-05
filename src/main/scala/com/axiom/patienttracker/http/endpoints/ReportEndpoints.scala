@@ -15,7 +15,7 @@ trait ReportEndpoints extends BaseEndpoint:
         .in("report")
         .out(plainBody[String])
 
-    val createEndpoint = baseEndpoint
+    val createEndpoint = secureBaseEndpoint
         .tag("reports")
         .name("reports")
         .description("create a new patient report")

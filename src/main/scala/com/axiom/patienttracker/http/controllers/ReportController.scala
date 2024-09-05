@@ -5,33 +5,40 @@ import sttp.tapir.server.ServerEndpoint
 import zio.*
 import com.axiom.patienttracker.http.endpoints.ReportEndpoints
 import io.getquill.ast.StringOperator.toLong
+import com.axiom.patienttracker.services.JWTService
+import com.axiom.patienttracker.domain.data.UserID
 
-class ReportController private (service: ReportService) extends BaseController with ReportEndpoints:
+class ReportController private (reportService: ReportService, jwtService: JWTService) extends BaseController with ReportEndpoints:
     val report: ServerEndpoint[Any, Task] = reportEndpoint
         .serverLogicSuccess[Task](_ => ZIO.succeed("Hey reports!"))
 
     val create: ServerEndpoint[Any, Task] = createEndpoint
-        .serverLogic(req =>
-            service.create(req).either)
+        .serverSecurityLogic[UserID, Task](token => 
+            jwtService.verifyToken(token).either)
+        .serverLogic(_ => req =>
+            reportService.create(req).either)
 
     val getAll: ServerEndpoint[Any, Task] = getAllEndpoint
         .serverLogic(req =>
-            service.getAll().either)
+            reportService.getAll().either)
 
     val getById: ServerEndpoint[Any, Task] = getByIdEndpoint
         .serverLogic( id =>
-            service.getById(id).either
+            reportService.getById(id).either
         )
     
     val getByUnitNumber: ServerEndpoint[Any, Task] = getByUnitNumberEndpoint
         .serverLogic( unitNumber => 
-            service.getByUnitNumber(unitNumber).either)
+            reportService.getByUnitNumber(unitNumber).either)
 
     val delete: ServerEndpoint[Any, Task] = deleteEndpoint
         .serverLogic( id => 
-            service.delete(id).either
+            reportService.delete(id).either
         )
     override val routes: List[ServerEndpoint[Any, Task]] = List(create, getAll, getById, getByUnitNumber, delete)
 
 object ReportController:
-    val makeZIO = ZIO.service[ReportService].map(service => new ReportController(service))
+    val makeZIO = for{
+        reportService <- ZIO.service[ReportService]
+        jwtService <- ZIO.service[JWTService]
+    } yield new ReportController(reportService, jwtService)

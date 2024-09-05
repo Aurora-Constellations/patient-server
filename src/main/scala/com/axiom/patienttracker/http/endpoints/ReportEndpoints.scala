@@ -24,7 +24,7 @@ trait ReportEndpoints extends BaseEndpoint:
         .in(jsonBody[CreateReportRequest])
         .out(jsonBody[Report])
 
-    val getAllEndpoint = baseEndpoint
+    val getAllEndpoint = secureBaseEndpoint
         .tag("reports")
         .name("reports")
         .description("get all the reports")
@@ -32,7 +32,7 @@ trait ReportEndpoints extends BaseEndpoint:
         .in("reports")
         .out(jsonBody[List[Report]])
     
-    val getByIdEndpoint = baseEndpoint
+    val getByIdEndpoint = secureBaseEndpoint
         .tag("reports")
         .name("reports")
         .description("get reports by id")
@@ -40,7 +40,7 @@ trait ReportEndpoints extends BaseEndpoint:
         .get
         .out(jsonBody[Option[Report]])
 
-    val getByUnitNumberEndpoint = baseEndpoint
+    val getByUnitNumberEndpoint = secureBaseEndpoint
         .tag("reports")
         .name("reports")
         .description("get patient report by unit number")
@@ -48,7 +48,7 @@ trait ReportEndpoints extends BaseEndpoint:
         .get
         .out(jsonBody[List[Report]])
 
-    val deleteEndpoint = baseEndpoint
+    val deleteEndpoint = secureBaseEndpoint
         .tag("reports")
         .name("delete")
         .description("delete patinet report")

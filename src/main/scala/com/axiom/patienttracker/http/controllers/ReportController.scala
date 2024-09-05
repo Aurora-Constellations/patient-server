@@ -19,20 +19,30 @@ class ReportController private (reportService: ReportService, jwtService: JWTSer
             reportService.create(req).either)
 
     val getAll: ServerEndpoint[Any, Task] = getAllEndpoint
-        .serverLogic(req =>
+        .serverSecurityLogic[UserID, Task](token => 
+            jwtService.verifyToken(token).either)
+        .serverLogic(_ => req =>
             reportService.getAll().either)
 
     val getById: ServerEndpoint[Any, Task] = getByIdEndpoint
-        .serverLogic( id =>
+        .serverSecurityLogic[UserID, Task](token => 
+            jwtService.verifyToken(token).either
+        )
+        .serverLogic(_ => id =>
             reportService.getById(id).either
         )
     
     val getByUnitNumber: ServerEndpoint[Any, Task] = getByUnitNumberEndpoint
-        .serverLogic( unitNumber => 
+        .serverSecurityLogic[UserID, Task](token => 
+            jwtService.verifyToken(token).either)
+        .serverLogic(_ => unitNumber => 
             reportService.getByUnitNumber(unitNumber).either)
 
     val delete: ServerEndpoint[Any, Task] = deleteEndpoint
-        .serverLogic( id => 
+        .serverSecurityLogic[UserID, Task](token => 
+            jwtService.verifyToken(token).either
+        )
+        .serverLogic(_ => id => 
             reportService.delete(id).either
         )
     override val routes: List[ServerEndpoint[Any, Task]] = List(create, getAll, getById, getByUnitNumber, delete)

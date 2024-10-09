@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import zio.config.typesafe.TypesafeConfig
 
 object Configs:
-
+    // FIXME In future, might need to move to the newer version of magnolia and fix this
     //case-class type: C
     def makeLayer[C](path: String)(using desc: Descriptor[C], tag: Tag[C]): ZLayer[Any, Throwable, C] = 
         TypesafeConfig.fromTypesafeConfig(

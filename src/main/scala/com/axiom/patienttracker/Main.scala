@@ -15,7 +15,7 @@ import com.axiom.patienttracker.config.Configs
 import com.axiom.patienttracker.config.JWTConfig
 import com.axiom.patienttracker.repositories.RecoveryTokensRepositoryLive
 import com.axiom.patienttracker.config.RecoveryTokensConfig
-
+import com.axiom.dataimport.api.importpatients
 
 object Main extends ZIOAppDefault:
 
@@ -44,3 +44,7 @@ object Main extends ZIOAppDefault:
       // postgres dependency, qill layer
       Repository.dataLayer
     )
+
+// TODO Try to run inside zio
+@main def runDataImportsCSV(): Unit =
+  println(importpatients.map(patient => patient.unitNumber))

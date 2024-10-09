@@ -1,4 +1,4 @@
-val scala3Version = "3.4.2"
+val scala3Version = "3.5.1"//"3.4.2"
 val zioVersion = "2.0.15"
 val tapirVersion = "1.11.1"
 val quillVersion = "4.8.5"
@@ -30,6 +30,8 @@ lazy val root = project
     libraryDependencies += "dev.zio" %% "zio-config"  % zioConfigVersion,
     libraryDependencies += "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
     libraryDependencies += "dev.zio" %% "zio-config-typesafe" % zioConfigVersion,
+
+    libraryDependencies += "com.axiom" %% "dataimportcsv3s" % "0.0.1-SNAPSHOT",
 
     libraryDependencies += "org.postgresql" % "postgresql" % postgresVersion,
     libraryDependencies += "com.auth0" % "java-jwt" % "4.4.0",

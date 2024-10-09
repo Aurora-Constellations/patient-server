@@ -81,5 +81,5 @@ object JWTServiceDemo extends ZIOAppDefault:
     override def run: ZIO[Any & (ZIOAppArgs & Scope), Any, Any] = 
         program.provide(
             JWTServiceLive.layer,
-            Configs.makeLayer[JWTConfig]("patienttrackerdb.jwt")
+            Configs.makeLayer[JWTConfig]("patienttracker.jwt")
         )

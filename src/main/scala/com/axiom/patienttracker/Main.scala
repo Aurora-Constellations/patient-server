@@ -16,9 +16,12 @@ import com.axiom.patienttracker.config.JWTConfig
 import com.axiom.patienttracker.repositories.RecoveryTokensRepositoryLive
 import com.axiom.patienttracker.config.RecoveryTokensConfig
 import com.axiom.dataimport.api.importpatients
+import zio.http.Server.RequestStreaming
 
 object Main extends ZIOAppDefault:
-
+  val customConfig = Server.Config.default.copy(
+    requestStreaming = RequestStreaming.Enabled // increase request body length
+  )
   val serverProgram = for {
     endpoints <- HttpApi.endpointsZIO
     server <- Server.serve(
@@ -29,7 +32,10 @@ object Main extends ZIOAppDefault:
   } yield ()
   override def run =
     serverProgram.provide(
-      Server.default,
+      // Replace Server.default with custom config
+      //Server.default,
+      Server.live,
+      ZLayer.succeed(customConfig),
       //service
       PatientServiceLive.layer,
       ReportServiceLive.layer,

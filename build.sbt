@@ -1,6 +1,6 @@
 val scala3Version = "3.5.1"//"3.4.2"
 val zioVersion = "2.0.15"
-val tapirVersion = "1.11.1"
+val tapirVersion = "1.11.6"//"1.11.1"
 val quillVersion = "4.8.5"
 val postgresVersion = "42.5.0"
 val zioConfigVersion  = "3.0.7" // old version
@@ -17,7 +17,7 @@ lazy val root = project
 
     libraryDependencies += "dev.zio" %% "zio" % zioVersion,
     libraryDependencies += "dev.zio" %% "zio-json" % "0.6.0",
-    libraryDependencies += "dev.zio" %% "zio-http" % "3.0.0-RC2",
+    libraryDependencies += "dev.zio" %% "zio-http" % "3.0.1",//"3.0.0-RC2",
 
     // libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-core" % tapirVersion,
     // https://mvnrepository.com/artifact/com.softwaremill.sttp.tapir/tapir-json-zio

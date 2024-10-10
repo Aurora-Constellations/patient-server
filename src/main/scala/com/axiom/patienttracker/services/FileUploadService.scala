@@ -1,7 +1,6 @@
 package com.axiom.patienttracker.services
 
 import zio.*
-import com.axiom.patienttracker.domain.data.FileUpload
 import sttp.model.Part
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets

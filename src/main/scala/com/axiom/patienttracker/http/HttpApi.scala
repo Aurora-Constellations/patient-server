@@ -10,7 +10,7 @@ object HttpApi:
         patients <- PatientController.makeZIO
         reports <- ReportController.makeZIO
         users <- UserController.makeZIO
-        files <- FileUploadController.makeZIO
+        files <- FileController.makeZIO
         // Keep adding controllers here
     } yield List(patients, reports, users, files)
 

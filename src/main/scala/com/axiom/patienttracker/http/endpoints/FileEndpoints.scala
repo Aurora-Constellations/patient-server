@@ -2,10 +2,11 @@ package com.axiom.patienttracker.http.endpoints
 
 import java.io.File
 import sttp.tapir.*
+import sttp.tapir.json.zio.*
 import sttp.tapir.server.model.EndpointExtensions.*
 import sttp.model.Part
 
-trait FileUploadEndpoints extends BaseEndpoint:
+trait FileEndpoints extends BaseEndpoint:
   val uploadTextFileEndpoint = baseEndpoint
     .tag("upload")
     .name("upload")
@@ -14,3 +15,11 @@ trait FileUploadEndpoints extends BaseEndpoint:
     .post
     .in(multipartBody)
     .out(plainBody[String])
+
+  val importFileEndpoint = baseEndpoint
+    .tag("import")
+    .name("import")
+    .description("getting the latest file data")
+    .in("import")
+    .get
+    .out(jsonBody[List[String]])

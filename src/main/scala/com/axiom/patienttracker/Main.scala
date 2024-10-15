@@ -42,7 +42,7 @@ object Main extends ZIOAppDefault:
       UserServiceLive.layer,
       JWTServiceLive.configuredLayer,
       EmailServiceLive.configuredLayer,
-      FileUploadServiceLive.layer,
+      FileServiceLive.configuredLayer,
       // repo dependency
       PatientRepositoryLive.layer,
       ReportRepositoryLive.layer,

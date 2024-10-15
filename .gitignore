@@ -37,3 +37,6 @@ hs_err_pid4464.log
 
 # Application configurations
 ./src/main/resources/application.conf
+
+# Env
+.env

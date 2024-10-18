@@ -6,28 +6,23 @@ import zio.json.DeriveJsonCodec
 
 final case class Patient(
     id: Long,
+    account: String,
     unitNumber: String,
-    lastName: String,
-    firstName: String,
+    patient: String,
     sex: String,
     dob: LocalDate,
     hcn: Option[String] = None,
+    admitDate: LocalDate,
+    location: String,
+    room: String,
+    bed: String,
+    admitting: Option[String] = None,
+    attending: Option[String] = None,
     family: Option[String] = None,
     famPriv: Option[String] = None,
     hosp: Option[String] = None,
     flag: Option[String] = None,
-    address1: Option[String] = None,
-    address2: Option[String] = None,
-    city: Option[String] = None,
-    province: Option[String] = None,
-    postalCode: Option[String] = None,
-    homePhoneNumber: Option[String] = None,
-    workPhoneNumber: Option[String] = None,
-    ohip: Option[String] = None,
-    familyPhysician: Option[String] = None,
-    attending: Option[String] = None,
-    collab1: Option[String] = None,
-    collab2: Option[String] = None
+    service: Option[String] = None
 )
 
 object Patient:

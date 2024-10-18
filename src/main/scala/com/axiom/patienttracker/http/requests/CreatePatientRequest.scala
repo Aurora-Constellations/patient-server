@@ -6,31 +6,26 @@ import zio.json.DeriveJsonCodec
 import com.axiom.patienttracker.domain.data.Patient
 
 final case class CreatePatientRequest(
+    account: String,
     unitNumber: String,
-    lastName: String,
-    firstName: String,
+    patient: String,
     sex: String,
     dob: LocalDate,
     hcn: Option[String] = None,
+    admitDate: LocalDate,
+    location: String,
+    room: String,
+    bed: String,
+    admitting: Option[String] = None,
+    attending: Option[String] = None,
     family: Option[String] = None,
     famPriv: Option[String] = None,
     hosp: Option[String] = None,
     flag: Option[String] = None,
-    address1: Option[String] = None,
-    address2: Option[String] = None,
-    city: Option[String] = None,
-    province: Option[String] = None,
-    postalCode: Option[String] = None,
-    homePhoneNumber: Option[String] = None,
-    workPhoneNumber: Option[String] = None,
-    ohip: Option[String] = None,
-    familyPhysician: Option[String] = None,
-    attending: Option[String] = None,
-    collab1: Option[String] = None,
-    collab2: Option[String] = None
+    service: Option[String] = None
 ):
     def toPatient(id: Long) =
-        Patient(id, unitNumber, lastName, firstName, sex, dob, hcn, family, famPriv, hosp, flag, address1, address2, city, province, postalCode, homePhoneNumber, workPhoneNumber, ohip, familyPhysician, attending, collab1, collab2)
+        Patient(id, account, unitNumber, patient, sex, dob, hcn, admitDate, location, room, bed, admitting, attending, family, famPriv, hosp, flag, service)
 
 object CreatePatientRequest:
     given codec: JsonCodec[CreatePatientRequest] = DeriveJsonCodec.gen[CreatePatientRequest]

@@ -3,28 +3,23 @@ CREATE DATABASE patienttracker;
 
 CREATE TABLE IF NOT EXISTS patients (
     id BIGSERIAL PRIMARY KEY,
+    account TEXT NOT NULL,
     unit_number TEXT UNIQUE NOT NULL,
-    last_name TEXT NOT NULL,
-    first_name TEXT NOT NULL,
+    patient TEXT NOT NULL,
     sex TEXT NOT NULL,
     dob DATE NOT NULL,
     hcn TEXT,
+    admit_date DATE NOT NULL,
+    location TEXT NOT NULL,
+    room TEXT NOT NULL,
+    bed TEXT NOT NULL,
+    admitting TEXT,
+    attending TEXT,
     family TEXT,
     fam_priv TEXT,
     hosp TEXT,
     flag TEXT,
-    address1 TEXT,
-    address2 TEXT,
-    city TEXT,
-    province TEXT,
-    postal_code TEXT,
-    home_phone_number TEXT,
-    work_phone_number TEXT,
-    ohip TEXT,
-    family_physician TEXT,
-    attending TEXT,
-    collab1 TEXT,
-    collab2 TEXT
+    service TEXT
 );
 
 CREATE TABLE IF NOT EXISTS reports (

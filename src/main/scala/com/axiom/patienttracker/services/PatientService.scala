@@ -21,23 +21,35 @@ class PatientServiceLive private (repo: PatientRepository) extends PatientServic
 
     private def applyUpdates(patient: Patient, updatedPatient: UpdatePatientRequest): Patient = 
         patient.copy(
-            account = updatedPatient.account.getOrElse(patient.account),
+            accountNumber = updatedPatient.accountNumber.getOrElse(patient.accountNumber),
             unitNumber = updatedPatient.unitNumber.getOrElse(patient.unitNumber),
-            patient = updatedPatient.patient.getOrElse(patient.patient),
+            firstName = updatedPatient.firstName.getOrElse(patient.firstName),
+            lastName = updatedPatient.lastName.getOrElse(patient.lastName),
             sex = updatedPatient.sex.getOrElse(patient.sex),
-            dob = updatedPatient.dob.getOrElse(patient.dob),
+            dob = updatedPatient.dob.orElse(patient.dob),
             hcn = updatedPatient.hcn.orElse(patient.hcn),
-            admitDate = updatedPatient.admitDate.getOrElse(patient.admitDate),
-            location = updatedPatient.location.getOrElse(patient.location),
-            room = updatedPatient.room.getOrElse(patient.room),
-            bed = updatedPatient.bed.getOrElse(patient.bed),
-            admitting = updatedPatient.admitting.orElse(patient.admitting),
-            attending = updatedPatient.attending.orElse(patient.attending),
+            admitDate = updatedPatient.admitDate.orElse(patient.admitDate),
+            floor = updatedPatient.floor.orElse(patient.floor),
+            room = updatedPatient.room.orElse(patient.room),
+            bed = updatedPatient.bed.orElse(patient.bed),
+            mrp = updatedPatient.mrp.orElse(patient.mrp),
+            admittingPhys = updatedPatient.admittingPhys.orElse(patient.admittingPhys),
             family = updatedPatient.family.orElse(patient.family),
             famPriv = updatedPatient.famPriv.orElse(patient.famPriv),
             hosp = updatedPatient.hosp.orElse(patient.hosp),
             flag = updatedPatient.flag.orElse(patient.flag),
-            service = updatedPatient.service.orElse(patient.service)
+            service = updatedPatient.service.orElse(patient.service),
+            address1 = updatedPatient.address1.orElse(patient.address1),
+            address2 = updatedPatient.address2.orElse(patient.address2),
+            city = updatedPatient.city.orElse(patient.city),
+            province = updatedPatient.province.orElse(patient.province),
+            postalCode = updatedPatient.postalCode.orElse(patient.postalCode),
+            homePhoneNumber = updatedPatient.homePhoneNumber.orElse(patient.homePhoneNumber),
+            workPhoneNumber = updatedPatient.workPhoneNumber.orElse(patient.workPhoneNumber),
+            ohip = updatedPatient.ohip.orElse(patient.ohip),
+            attending = updatedPatient.attending.orElse(patient.attending),
+            collab1 = updatedPatient.collab1.orElse(patient.collab1),
+            collab2 = updatedPatient.collab2.orElse(patient.collab2)
         )
     override def create(req: CreatePatientRequest): Task[Patient] = 
         repo.create(req.toPatient(-1L))

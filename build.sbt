@@ -14,7 +14,7 @@ lazy val root = project
     name := "patient-server",
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
-
+    scalacOptions ++= Seq("-Xmax-inlines", "50"), // Maximal number of successive inlines (32) exceeded, -Xmax-inlines to change the limit.
     libraryDependencies += "dev.zio" %% "zio" % zioVersion,
     libraryDependencies += "dev.zio" %% "zio-json" % "0.6.0",
     libraryDependencies += "dev.zio" %% "zio-http" % "3.0.1",//"3.0.0-RC2",

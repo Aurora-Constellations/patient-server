@@ -22,4 +22,4 @@ trait FileEndpoints extends BaseEndpoint:
     .description("getting the latest file data")
     .in("import")
     .get
-    .out(jsonBody[List[String]])
+    .out(jsonBody[String])

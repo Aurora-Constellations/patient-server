@@ -17,17 +17,38 @@ import com.axiom.patienttracker.repositories.RecoveryTokensRepositoryLive
 import com.axiom.patienttracker.config.RecoveryTokensConfig
 import com.axiom.dataimport.api.importpatients
 import zio.http.Server.RequestStreaming
+import zio.http.Middleware.CorsConfig
+import zio.http.Header.{AccessControlAllowMethods, AccessControlAllowOrigin, Origin}
+import zio.http.Method
+import zio.http.Header.AccessControlAllowHeaders
+import zio.http.Middleware
 
 object Main extends ZIOAppDefault:
+  // Define your CORS configuration
+  private val corsConfig: CorsConfig = CorsConfig(
+    allowedOrigin = _ => Some(AccessControlAllowOrigin.All),
+    allowedMethods = AccessControlAllowMethods(
+      Method.GET,
+      Method.POST,
+      Method.PUT,
+      Method.DELETE,
+      Method.OPTIONS  // Include OPTIONS for preflight requests
+    ),
+    allowedHeaders = AccessControlAllowHeaders.All
+  )
+
   val customConfig = Server.Config.default.copy(
     requestStreaming = RequestStreaming.Enabled // increase request body length
   )
   val serverProgram = for {
     endpoints <- HttpApi.endpointsZIO
+    corsMiddleware = Middleware.cors(corsConfig)
     server <- Server.serve(
-      ZioHttpInterpreter(
-        ZioHttpServerOptions.default
-      ).toHttp(endpoints)
+      corsMiddleware(
+        ZioHttpInterpreter(
+          ZioHttpServerOptions.default
+        ).toHttp(endpoints)
+      )
     )
   } yield ()
   override def run =

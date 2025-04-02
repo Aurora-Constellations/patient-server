@@ -35,10 +35,11 @@ final case class CreatePatientRequest(
     ohip: Option[String] = None,
     attending: Option[String] = None,
     collab1: Option[String] = None,
-    collab2: Option[String] = None
+    collab2: Option[String] = None,
+    auroraFile: Option[String] = None
 ):
     def toPatient(id: Long) =
-        Patient(id, accountNumber, unitNumber, firstName, lastName, sex, dob, hcn, admitDate, floor, room, bed, mrp, admittingPhys, family, famPriv, hosp, flag, service, address1, address2, city, province, postalCode, homePhoneNumber, workPhoneNumber, ohip, attending, collab1, collab2)
+        Patient(id, accountNumber, unitNumber, firstName, lastName, sex, dob, hcn, admitDate, floor, room, bed, mrp, admittingPhys, family, famPriv, hosp, flag, service, address1, address2, city, province, postalCode, homePhoneNumber, workPhoneNumber, ohip, attending, collab1, collab2, auroraFile)
 
 object CreatePatientRequest:
     given codec: JsonCodec[CreatePatientRequest] = DeriveJsonCodec.gen[CreatePatientRequest]

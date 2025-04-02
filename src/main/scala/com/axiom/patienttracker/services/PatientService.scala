@@ -49,7 +49,8 @@ class PatientServiceLive private (repo: PatientRepository) extends PatientServic
             ohip = updatedPatient.ohip.orElse(patient.ohip),
             attending = updatedPatient.attending.orElse(patient.attending),
             collab1 = updatedPatient.collab1.orElse(patient.collab1),
-            collab2 = updatedPatient.collab2.orElse(patient.collab2)
+            collab2 = updatedPatient.collab2.orElse(patient.collab2),
+            auroraFile = updatedPatient.auroraFile.orElse(patient.auroraFile)
         )
     override def create(req: CreatePatientRequest): Task[Patient] = 
         repo.create(req.toPatient(-1L))

@@ -26,7 +26,7 @@ object PatientRepositorySpec extends ZIOSpecDefault:
                     patient <- repo.create(Patient(1L, "TB00202100","testing", "the jvm", "male", stringToDate("2024-08-21")))
                 }yield patient
                 program.assert{
-                    case Patient(_, "TB00202100","testing", "the jvm", "male", date, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => true
+                    case Patient(_, "TB00202100","testing", "the jvm", "male", date, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => true
                     case _ => false
                 }
         ).provide(

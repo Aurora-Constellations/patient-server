@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS patients (
     ohip TEXT,
     attending TEXT,
     collab1 TEXT,
-    collab2 TEXT
+    collab2 TEXT,
+    aurora_file TEXT
 );
 
 CREATE TABLE IF NOT EXISTS reports (

@@ -35,7 +35,8 @@ final case class Patient(
     ohip: Option[String] = None,
     attending: Option[String] = None,
     collab1: Option[String] = None,
-    collab2: Option[String] = None
+    collab2: Option[String] = None,
+    auroraFile: Option[String] = None
 )
 
 object Patient:

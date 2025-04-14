@@ -1,8 +1,10 @@
-## sbt project compiled with Scala 3
+## Patient Server using Scala 3 and ZIO 2
+
+> **Note:** Ensure Docker is installed on your system before starting the project. Use the provided `docker-compose.yml` file to set up the database effortlessly.
 
 ### Usage
 
-This is a normal sbt project. You can compile code with `sbt compile`, run it with `sbt run`, and `sbt console` will start a Scala 3 REPL.
+This is a normal sbt project. You can compile code with `sbt compile`, run it with `sbt run` (To run the complete project hit '**1**'), and `sbt console` will start a Scala 3 REPL.
 
 For more information on the sbt-dotty plugin, see the
 [scala3-example-project](https://github.com/scala/scala3-example-project/blob/main/README.md).
@@ -20,7 +22,7 @@ To get started with the project, follow the instructions below.
 
 Clone the repository to your local machine using Git:
 
-` git clone https://github.com/your-repository.git `
+` git clone https://github.com/yash-a-18/patient-server.git `
 
 ### 2. Create .env File
 Copy the contents from the provided .env.sample file into a new .env file.

@@ -9,7 +9,7 @@ import scala.runtime.BoxesRunTime
 
 trait PatientRepository:
     def create(patient: Patient): Task[Patient]
-    def update(id: Long, op: Patient => Patient): Task[Patient]
+    def update(unitNumber: String, op: Patient => Patient): Task[Patient]
     def delete(id: Long): Task[Patient]
     def getById(id: Long): Task[Option[Patient]]
     def getByUnitNumber(unitNumber: String): Task[Option[Patient]]
@@ -49,12 +49,12 @@ class PatientRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends PatientRep
         run{
             query[Patient]
         }
-    override def update(id: Long, op: Patient => Patient): Task[Patient] = 
+    override def update(unitNumber: String, op: Patient => Patient): Task[Patient] = 
         for{
-            current <- getById(id).someOrFail(new RuntimeException(s"Could not update: missing id: $id"))// someOrFail helps us to force change the return type from Task[Option[Patient]] to Task[Patient]
+            current <- getByUnitNumber(unitNumber).someOrFail(new RuntimeException(s"Could not update: missing Unit Number: $unitNumber"))// someOrFail helps us to force change the return type from Task[Option[Patient]] to Task[Patient]
             updated <- run{
                 query[Patient]
-                    .filter(_.id == lift(id))
+                    .filter(_.unitNumber == lift(unitNumber))
                     .updateValue(lift(op(current)))// applying op function
                     .returning(p => p)
             }

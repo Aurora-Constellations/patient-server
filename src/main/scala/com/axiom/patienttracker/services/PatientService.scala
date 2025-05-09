@@ -11,7 +11,7 @@ import com.axiom.patienttracker.http.requests.UpdatePatientRequest
 // in between the HTTP layer and the Database layer
 trait PatientService:
     def create(req: CreatePatientRequest): Task[Patient]
-    def update(id: Long, req: UpdatePatientRequest): Task[Patient]
+    def update(unitNumber: String, req: UpdatePatientRequest): Task[Patient]
     def getAll: Task[List[Patient]]
     def getById(id: Long): Task[Option[Patient]]
     def getByUnitNumber(unitNumber: String): Task[Option[Patient]]
@@ -54,11 +54,11 @@ class PatientServiceLive private (repo: PatientRepository) extends PatientServic
         )
     override def create(req: CreatePatientRequest): Task[Patient] = 
         repo.create(req.toPatient(-1L))
-    override def update(id: Long, req: UpdatePatientRequest): Task[Patient] = 
+    override def update(unitNumber: String, req: UpdatePatientRequest): Task[Patient] = 
         for {
-            existingPatient <- repo.getById(id).someOrFail(new RuntimeException(s"Could not update: missing id: $id"))
+            existingPatient <- repo.getByUnitNumber(unitNumber).someOrFail(new RuntimeException(s"Could not update: missing Unit Number: $unitNumber"))
             updatedPatient = applyUpdates(existingPatient, req)
-            result <- repo.update(id, patient => updatedPatient)
+            result <- repo.update(unitNumber, patient => updatedPatient)
         } yield result
     override def getAll: Task[List[Patient]] = 
         repo.getAll()

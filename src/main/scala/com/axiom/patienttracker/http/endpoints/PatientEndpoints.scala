@@ -29,7 +29,7 @@ trait PatientEndpoints extends BaseEndpoint:
     .tag("patients")
     .name("update")
     .description("update the patient details")
-    .in("patients" / "update" / path[Long]("id"))
+    .in("patients" / "update" / path[String]("unitNumber"))
     .put
     .in(jsonBody[UpdatePatientRequest])
     .out(jsonBody[Patient])

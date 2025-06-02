@@ -10,7 +10,7 @@ import scala.runtime.BoxesRunTime
 trait PatientRepository:
     def create(patient: Patient): Task[Patient]
     def update(unitNumber: String, op: Patient => Patient): Task[Patient]
-    def delete(id: Long): Task[Patient]
+    def delete(unitNumber: String): Task[Patient]
     def getById(id: Long): Task[Option[Patient]]
     def getByUnitNumber(unitNumber: String): Task[Option[Patient]]
     def getAll(): Task[List[Patient]]
@@ -60,10 +60,10 @@ class PatientRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends PatientRep
             }
         } yield updated
 
-    override def delete(id: Long): Task[Patient] = 
+    override def delete(unitNumber: String): Task[Patient] = 
         run{
             query[Patient]
-                .filter(_.id == lift(id))
+                .filter(_.unitNumber == lift(unitNumber))
                 .delete
                 .returning(p => p)
         }

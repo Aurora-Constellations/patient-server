@@ -36,8 +36,8 @@ class PatientController private (service: PatientService) extends BaseController
             .either
     }
 
-    val delete: ServerEndpoint[Any, Task] = deleteEndpoint.serverLogic { id =>
-        service.delete(id).either
+    val delete: ServerEndpoint[Any, Task] = deleteEndpoint.serverLogic { unitNumber =>
+        service.delete(unitNumber).either
     }
 
     val patient: ServerEndpoint[Any, Task] = patientEndpoint

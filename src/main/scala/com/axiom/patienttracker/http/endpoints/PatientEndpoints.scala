@@ -55,7 +55,7 @@ trait PatientEndpoints extends BaseEndpoint:
     .name("delete")
     .description("delete the patient record")
     .delete
-    .in("patients" / "delete" / path[Long]("id"))
+    .in("patients" / "delete" / path[String]("unitNumber"))
     .out(jsonBody[Patient])
 
   val errorEndpoint = baseEndpoint

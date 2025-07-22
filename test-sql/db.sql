@@ -79,12 +79,12 @@ CREATE TABLE IF NOT EXISTS accounts (
 
 CREATE TABLE IF NOT EXISTS doctors (
     doctor_id BIGSERIAL PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    specialty TEXT,
-    email TEXT UNIQUE,
-    phone TEXT
+    name TEXT NOT NULL,
+    provider_id TEXT
 );
+
+CREATE INDEX IF NOT EXISTS idx_doctor_provider_id
+ON doctors(provider_id);
 
 
 
@@ -99,7 +99,7 @@ VALUES
 (1, '2024-01-01 08:00:00', NULL, 'Initial admission'),
 (1, '2024-03-01 09:30:00', '2024-03-10 12:00:00', 'Follow-up appointment');
 
-INSERT INTO doctors (first_name, last_name, specialty, email, phone)
-VALUES 
-('Gregory', 'House', 'Diagnostics', 'greg.house@hospital.com', '555-0001'),
-('Meredith', 'Grey', 'General Surgery', 'mer.grey@hospital.com', '555-0002'),
+INSERT INTO doctors (doctor_id, name, provider_id)
+VALUES
+('Dr. Gregory House', 'PRV1001'),
+('Dr. Miranda Bailey', 'PRV1005');

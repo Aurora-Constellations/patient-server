@@ -1,5 +1,5 @@
-CREATE DATABASE patienttracker;
-\c patienttracker;
+CREATE DATABASE patienttracker_test;
+\c patienttracker_test;
 
 CREATE TABLE IF NOT EXISTS patients (
     id BIGSERIAL PRIMARY KEY,
@@ -64,3 +64,7 @@ CREATE TABLE IF NOT EXISTS diagnostic_codes (
     label VARCHAR(100) NOT NULL,
     description TEXT NOT NULL
 );
+
+INSERT INTO diagnostic_codes VALUES
+('DX001', 'Hypertension', 'High blood pressure condition'),
+('DX002', 'Diabetes', 'Blood glucose regulation issue');

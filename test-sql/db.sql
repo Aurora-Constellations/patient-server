@@ -65,6 +65,23 @@ CREATE TABLE IF NOT EXISTS diagnostic_codes (
     description TEXT NOT NULL
 );
 
+-- ACCOUNTS TABLE
+
+CREATE TABLE IF NOT EXISTS accounts (
+    account_id BIGSERIAL PRIMARY KEY,
+    patient_id BIGINT NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP,
+    notes TEXT
+);
+
 INSERT INTO diagnostic_codes VALUES
 ('DX001', 'Hypertension', 'High blood pressure condition'),
 ('DX002', 'Diabetes', 'Blood glucose regulation issue');
+
+INSERT INTO accounts (patient_id, start_date, end_date, notes)
+VALUES
+(1, '2024-01-01 08:00:00', NULL, 'Initial admission'),
+(1, '2024-03-01 09:30:00', '2024-03-10 12:00:00', 'Follow-up appointment');
+
+

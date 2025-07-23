@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS patients (
 
 CREATE TABLE IF NOT EXISTS reports (
     id BIGSERIAL PRIMARY KEY,
-    patient_id BIGINT REFERENCES patients(id) ON DELETE CASCADE,
+    patient_id BIGINT REFERENCES patients(id) ON DELETE CASCADE ON UPDATE CASCADE,
     unit_number TEXT NOT NULL,
     systolic_pressure TEXT NOT NULL,
     diastolic_pressure TEXT NOT NULL,
@@ -69,10 +69,11 @@ CREATE TABLE IF NOT EXISTS diagnostic_codes (
 
 CREATE TABLE IF NOT EXISTS accounts (
     account_id BIGSERIAL PRIMARY KEY,
-    patient_id BIGINT NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    patient_id BIGINT NOT NULL REFERENCES patients(id) ON DELETE CASCADE ON UPDATE CASCADE,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP,
     notes TEXT
+    CHECK (end_date IS NULL OR start_date < end_date)
 );
 
 -- DOCTORS TABLE 
@@ -88,7 +89,7 @@ CREATE INDEX IF NOT EXISTS idx_doctor_provider_id
 
 -- ENCOUNTERS TABLE
 
-CREATE TABLE encounters (
+CREATE TABLE IF NOT EXISTS encounters (
     encounter_id      BIGINT PRIMARY KEY,
     account_id        BIGINT NOT NULL REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
     doctor_id         BIGINT NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -102,3 +103,11 @@ CREATE TABLE encounters (
 -- Create an index on start_date for faster querying/filtering
 CREATE INDEX IF NOT EXISTS idx_encounters_start_date
     ON encounters(start_date);
+
+-- BILLING CODES TABLE 
+CREATE TABLE IF NOT EXISTS billing_codes (
+    billing_code VARCHAR(15) PRIMARY KEY,
+    label VARCHAR(100) NOT NULL,
+    amount BIGINT NOT NULL,
+    description TEXT
+);

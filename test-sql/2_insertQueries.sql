@@ -82,6 +82,15 @@ INSERT INTO encounters (
     1004, 2, 1, '2024-07-04 08:00:00', NULL, NULL
 );
 
+INSERT INTO billing_codes (billing_code, label, amount, description)
+VALUES 
+('PROC1001', 'General Checkup', 50, 'Routine health check visit'),
+('PROC1002', 'Chest X-Ray', 120, 'X-ray imaging of chest cavity'),
+('PROC2001', 'MRI Brain', 500, 'MRI scan to assess brain activity'),
+('PROC9001', 'Ultrasound Abdomen', 350, 'Abdominal ultrasound exam');
+
+
+
 -- Row 5: Invalid data for testing CHECK constraint (end_date before start_date)
 -- This should fail if CHECK (end_date IS NULL OR end_date >= start_date) is enforced
 -- INSERT INTO encounters (
@@ -89,3 +98,7 @@ INSERT INTO encounters (
 -- ) VALUES (
 --     1005, 1, 2, '2024-07-05 12:00:00', '2024-07-05 11:00:00', decode('74657374206261642064617461', 'hex') -- "test bad data"
 -- );
+
+-- INVALID DATA TO CHECK DATE CONSTRAINT IN ACCOUNTS TABLE 
+--INSERT INTO accounts (patient_id, start_date, end_date)
+--VALUES (1, '2024-01-15', '2024-01-01');   

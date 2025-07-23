@@ -87,7 +87,39 @@ CREATE INDEX IF NOT EXISTS idx_doctor_provider_id
 ON doctors(provider_id);
 
 
-
+INSERT INTO patients (
+  account_number, unit_number, first_name, last_name, sex, dob, hcn, admit_date,
+  floor, room, bed, mrp, admitting_phys, family, fam_priv, hosp, flag, service,
+  address1, address2, city, province, postal_code, home_phone_number, work_phone_number,
+  ohip, attending, collab1, collab2, aurora_file
+) VALUES (
+  'ACC123456', 'UNIT7890', 'Alice', 'Johnson', 'F', '1985-04-12', 'HCN123456789', '2025-07-20 14:30:00',
+  'Cardiology', '204', 'B', 'Dr. Smith', 'Dr. Adams', 'Yes', 'No', 'General Hospital', 'Fall Risk', 'Cardiac',
+  '123 Maple St', 'Apt 5B', 'Toronto', 'ON', 'M4B1B3', '4161234567', '4167654321',
+  'OHIP123456', 'Dr. Wilson', 'Dr. Green', 'Dr. Patel', 'AUR123456'
+);
+INSERT INTO patients (
+  account_number, unit_number, first_name, last_name, sex, dob, hcn, admit_date,
+  floor, room, bed, mrp, admitting_phys, family, fam_priv, hosp, flag, service,
+  address1, address2, city, province, postal_code, home_phone_number, work_phone_number,
+  ohip, attending, collab1, collab2, aurora_file
+) VALUES (
+  'ACC654321', 'UNIT5678', 'Bob', 'Lee', 'M', NULL, 'HCN987654321', '2025-07-19 09:15:00',
+  'Neurology', '302', 'A', 'Dr. Carter', 'Dr. Evans', 'No', 'Yes', 'St. Mary''s', NULL, 'Neuro',
+  '456 Oak Ave', NULL, 'Ottawa', 'ON', 'K2P2N2', '6135550199', NULL,
+  'OHIP654321', 'Dr. Grey', 'Dr. Yang', NULL, 'AUR654321'
+);
+INSERT INTO patients (
+  account_number, unit_number, first_name, last_name, sex, dob, hcn, admit_date,
+  floor, room, bed, mrp, admitting_phys, family, fam_priv, hosp, flag, service,
+  address1, address2, city, province, postal_code, home_phone_number, work_phone_number,
+  ohip, attending, collab1, collab2, aurora_file
+) VALUES (
+  'ACC777888', 'UNIT9999', 'Charlie', 'Nguyen', 'X', NULL, NULL, '2025-07-18 18:45:00',
+  'Psychiatry', NULL, NULL, 'Dr. House', 'Dr. Foreman', 'Yes', NULL, 'City Hospital', NULL, 'Mental Health',
+  '789 Birch Rd', NULL, 'Hamilton', 'ON', 'L8P1A1', '9051112233', NULL,
+  'OHIP777888', 'Dr. Cameron', NULL, NULL, NULL
+);
 
 
 INSERT INTO diagnostic_codes VALUES
@@ -99,7 +131,7 @@ VALUES
 (1, '2024-01-01 08:00:00', NULL, 'Initial admission'),
 (1, '2024-03-01 09:30:00', '2024-03-10 12:00:00', 'Follow-up appointment');
 
-INSERT INTO doctors (doctor_id, name, provider_id)
+INSERT INTO doctors (name, provider_id)
 VALUES
 ('Dr. Gregory House', 'PRV1001'),
 ('Dr. Miranda Bailey', 'PRV1005');

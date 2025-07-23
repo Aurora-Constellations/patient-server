@@ -1,5 +1,5 @@
-CREATE DATABASE patienttracker;
-\c patienttracker;
+CREATE DATABASE patienttracker_test;
+\c patienttracker_test;
 
 CREATE TABLE IF NOT EXISTS patients (
     id BIGSERIAL PRIMARY KEY,

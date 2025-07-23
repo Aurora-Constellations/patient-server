@@ -85,9 +85,9 @@ INSERT INTO encounters (
 INSERT INTO billing_codes (billing_code, label, amount, description)
 VALUES 
 ('PROC1001', 'General Checkup', 50, 'Routine health check visit'),
-('PROC1002', 'Chest X-Ray', 120, 'X-ray imaging of chest cavity'),
-('PROC2001', 'MRI Brain', 500, 'MRI scan to assess brain activity'),
-('PROC9001', 'Ultrasound Abdomen', 350, 'Abdominal ultrasound exam');
+('PROC1002', 'Chest X-Ray', 120.755, 'X-ray imaging of chest cavity'),
+('PROC2001', 'MRI Brain', 500.654, 'MRI scan to assess brain activity'),
+('PROC9001', 'Ultrasound Abdomen', 350.57, 'Abdominal ultrasound exam');
 
 
 

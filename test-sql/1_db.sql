@@ -108,6 +108,6 @@ CREATE INDEX IF NOT EXISTS idx_encounters_start_date
 CREATE TABLE IF NOT EXISTS billing_codes (
     billing_code VARCHAR(15) PRIMARY KEY,
     label VARCHAR(100) NOT NULL,
-    amount BIGINT NOT NULL,
+    amount DECIMAL(12, 2) NOT NULL,
     description TEXT
 );

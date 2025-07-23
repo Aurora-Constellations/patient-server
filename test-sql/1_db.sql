@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS billing_codes (
 -- BILLINGS TABLE
 CREATE TABLE IF NOT EXISTS billings (
     billing_id BIGSERIAL PRIMARY KEY,
-    encounter_id BIGSERIAL NOT NULL REFERENCES encounters(encounter_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    encounter_id BIGINT NOT NULL REFERENCES encounters(encounter_id) ON DELETE CASCADE ON UPDATE CASCADE,
     billing_code VARCHAR(15) NOT NULL REFERENCES billing_codes(billing_code) ON DELETE RESTRICT ON UPDATE CASCADE,
     diagnostic_code VARCHAR(15) NOT NULL REFERENCES diagnostic_codes(diagnostic_code) ON DELETE RESTRICT ON UPDATE CASCADE,
     recorded_time TIMESTAMP NOT NULL,

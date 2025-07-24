@@ -8,6 +8,7 @@ import sttp.tapir.server.ServerEndpoint
 import com.axiom.patienttracker.http.endpoints.DoctorEndpoints
 import com.axiom.patienttracker.services.DoctorService
 
+
 class DoctorController private (service: DoctorService) extends BaseController with DoctorEndpoints:
     val doctor: ServerEndpoint[Any, Task] = doctorEndpoint
         .serverLogicSuccess[Task](_ => ZIO.succeed("All set!"))
@@ -16,8 +17,11 @@ class DoctorController private (service: DoctorService) extends BaseController w
         .serverLogic[Task](
             req => service.create(req).either
         )
-
-    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor)
+    val updateDoctor: ServerEndpoint[Any, Task]= updateDoctorEndpoint.serverLogic{ case (providerIdFromPath, body) =>
+            val fullRequest = body.copy(providerId = Some(providerIdFromPath))
+            service.update(fullRequest).either
+        }
+    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor, updateDoctor)
 
 object DoctorController:
     val makeZIO = for{

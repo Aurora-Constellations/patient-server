@@ -84,6 +84,9 @@ CREATE TABLE IF NOT EXISTS doctors (
     provider_id TEXT
 );
 
+ALTER TABLE doctors ALTER COLUMN provider_id SET NOT NULL;
+ALTER TABLE doctors ADD CONSTRAINT unique_provider_id UNIQUE (provider_id);
+
 CREATE INDEX IF NOT EXISTS idx_doctor_provider_id
     ON doctors(provider_id);
 

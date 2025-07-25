@@ -23,6 +23,7 @@ import com.axiom.patienttracker.repositories.Repository
 
 import com.axiom.patienttracker.syntax.*
 import com.axiom.patienttracker.services.PatientService
+import com.axiom.patienttracker.http.requests.UpdatePatientRequest
 
 object PatientControllerSpec extends ZIOSpecDefault:
     // building MonadErro by ourselves
@@ -30,9 +31,11 @@ object PatientControllerSpec extends ZIOSpecDefault:
 
     private val serviceStub = new PatientService {
         override def create(req: CreatePatientRequest): Task[Patient] = ???
+        override def update(unitNumber: String, req: UpdatePatientRequest): Task[Patient] = ???
         override def getAll: Task[List[Patient]] = ???
         override def getById(id: Long): Task[Option[Patient]] = ???
         override def getByUnitNumber(unitNumber: String): Task[Option[Patient]] = ???
+        override def delete(unitNumber: String): Task[Patient] = ???
     }
 
     def stringToDate(dateString: String) =
@@ -64,7 +67,7 @@ object PatientControllerSpec extends ZIOSpecDefault:
                     // run http request
                     response <- basicRequest // similar to endpoint value when we create patient endpoints
                         .post(uri"/patients") // uri is a custom interpretor as "/patients" will be just string orelse
-                        .body(CreatePatientRequest("TB00202100","testing", "the jvm", "male", stringToDate("2024-08-21")).toJson)
+                        .body(CreatePatientRequest("TB309089/23","TB00202100","testing", "the jvm", "male", Some(stringToDate("2024-08-21"))).toJson)
                         .send(backendStub)
                 } yield response.body
                 
@@ -72,7 +75,7 @@ object PatientControllerSpec extends ZIOSpecDefault:
                 program.assert{    
                     respBody =>
                         respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
-                            .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
+                            .contains(Patient(27, "TB309089/23", "TB00202100", "testing", "the jvm", "male", Some(stringToDate("2024-08-21"))))
                 }
             ,
             test("Get all Patients"):
@@ -98,7 +101,7 @@ object PatientControllerSpec extends ZIOSpecDefault:
                 program.assert{    
                     respBody =>
                         respBody.toOption.flatMap(_.fromJson[Patient].toOption) //Option[Patient]
-                            .contains(Patient(27, "TB00202100", "testing", "the jvm", "male", stringToDate("2024-08-21")))
+                            .contains(Patient(27, "TB309089/23", "TB00202100", "testing", "the jvm", "male", Some(stringToDate("2024-08-21"))))
                 }
         ).provide(
                 ZLayer.succeed(serviceStub)

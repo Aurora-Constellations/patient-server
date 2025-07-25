@@ -21,7 +21,10 @@ class DoctorController private (service: DoctorService) extends BaseController w
             val fullRequest = body.copy(providerId = Some(providerIdFromPath))
             service.update(fullRequest).either
         }
-    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor, updateDoctor)
+    val deleteDoctor: ServerEndpoint[Any, Task] = deleteDoctorEndpoint.serverLogic { providerId =>
+        service.delete(providerId).either
+    }
+    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor, updateDoctor,deleteDoctor )
 
 object DoctorController:
     val makeZIO = for{

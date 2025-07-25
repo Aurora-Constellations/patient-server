@@ -34,3 +34,11 @@ trait DoctorEndpoints extends BaseEndpoint:
         .put
         .in(jsonBody[UpdateDoctorRequest])
         .out(jsonBody[Doctor])
+
+    val deleteDoctorEndpoint = baseEndpoint
+    .tag("doctor")
+    .name("delete")
+    .description("delete the doctor record")
+    .delete
+    .in("doctor" / "delete" / path[String]("providerId"))
+    .out(jsonBody[Doctor])

@@ -10,6 +10,7 @@ trait DoctorRepository:
     def create(doctor: Doctor): Task[Doctor]
     def update(providerId: String, op: Doctor => Doctor): Task[Doctor]
     def getByProviderId(providerId: String): Task[Option[Doctor]]
+    def delete(providerId: String): Task[Doctor] 
 
 class DoctorRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends DoctorRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -46,6 +47,16 @@ class DoctorRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends DoctorRepos
                     .returning(d => d)
                 }
             } yield updated
+        
+    override def delete(providerId: String): Task[Doctor] =
+            for {
+                current <- getByProviderId(providerId)
+                .someOrFail(new RuntimeException(s"No doctor found with providerId: $providerId"))
+                deleted <- run {
+                query[Doctor].filter(_.providerId == lift(providerId)).delete
+                }.as(current) // return the deleted doctor info
+            } yield deleted
+
 
 
 object DoctorRepositoryLive:

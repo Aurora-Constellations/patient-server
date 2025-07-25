@@ -11,6 +11,9 @@ import com.axiom.patienttracker.http.requests.UpdateDoctorRequest
 trait DoctorService:
     def create(req: CreateDoctorRequest): Task[Doctor]
     def update(req: UpdateDoctorRequest): Task[Doctor]
+    def delete(providerId: String): Task[Doctor] 
+    
+
 
 class DoctorServiceLive private (repo: DoctorRepository) extends DoctorService:
     override def create(req: CreateDoctorRequest): Task[Doctor] = 
@@ -27,6 +30,9 @@ class DoctorServiceLive private (repo: DoctorRepository) extends DoctorService:
             repo.update(id, existing => applyUpdates(existing, req))
         case None =>
             ZIO.fail(new RuntimeException("Missing providerId in update request"))
+    
+    override def delete(providerId: String): Task[Doctor] =
+    repo.delete(providerId)
 
 
 object DoctorServiceLive:

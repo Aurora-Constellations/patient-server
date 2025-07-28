@@ -24,6 +24,7 @@ import zio.http.Header.AccessControlAllowHeaders
 import zio.http.Middleware
 import com.axiom.patienttracker.repositories.DoctorRepositoryLive
 import com.axiom.patienttracker.repositories.AccountRepositoryLive
+import com.axiom.patienttracker.repositories.BillingCodeRepositoryLive
 
 object Main extends ZIOAppDefault:
   // Define your CORS configuration
@@ -65,6 +66,7 @@ object Main extends ZIOAppDefault:
       UserServiceLive.layer,
       DoctorServiceLive.layer,
       AccountServiceLive.layer,
+      BillingCodeServiceLive.layer,
       JWTServiceLive.configuredLayer,
       EmailServiceLive.configuredLayer,
       FileServiceLive.configuredLayer,
@@ -74,6 +76,7 @@ object Main extends ZIOAppDefault:
       UserRepositoryLive.layer,
       DoctorRepositoryLive.layer,
       AccountRepositoryLive.layer,
+      BillingCodeRepositoryLive.layer,
       RecoveryTokensRepositoryLive.configuredLayer,
       // postgres dependency, qill layer
       Repository.dataLayer

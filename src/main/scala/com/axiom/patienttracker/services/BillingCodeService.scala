@@ -8,10 +8,14 @@ import com.axiom.patienttracker.repositories.BillingCodeRepository
 // in between the HTTP layer and the Database layer
 trait BillingCodeService:
     def create(req: BillingCode): Task[BillingCode]
+    def getBillingCode(billingCode: String): Task[Option[BillingCode]]
 
 class BillingCodeServiceLive private (repo: BillingCodeRepository) extends BillingCodeService:
     override def create(req: BillingCode): Task[BillingCode] = 
         repo.create(req)
+
+    override def getBillingCode(billingCode: String): Task[Option[BillingCode]] = 
+        repo.getBillingCode(billingCode)
 
 object BillingCodeServiceLive:
     val layer = ZLayer{

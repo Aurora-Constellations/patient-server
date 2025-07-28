@@ -22,3 +22,11 @@ trait BillingCodeEndpoints extends BaseEndpoint:
         .in("billingcode")
         .in(jsonBody[BillingCode])
         .out(jsonBody[BillingCode])
+
+    val getBillingCodeEndpoint = baseEndpoint
+        .tag("billing")
+        .name("getBillingCode")
+        .description("Get a billing code by code")
+        .get
+        .in("billingcode" / path[String]("billingCode"))
+        .out(jsonBody[Option[BillingCode]])

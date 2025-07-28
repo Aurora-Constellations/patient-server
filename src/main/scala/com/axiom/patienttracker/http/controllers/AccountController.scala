@@ -33,7 +33,13 @@ class AccountController private (service: AccountService) extends BaseController
             _ => service.getAll.either
         )
 
-    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount, getAccount, getAccountByPatientId, getAllAccounts)
+    val updateAccount: ServerEndpoint[Any, Task] = updateAccountEndpoint
+        .serverLogic[Task] {
+            case (accountId, req) => 
+                service.update(accountId, req).either
+        }
+
+    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount, getAccount, getAccountByPatientId, getAllAccounts, updateAccount)
 
 object AccountController:
     val makeZIO = for {

@@ -11,6 +11,7 @@ trait AccountRepository:
     def getById(accountId: Long): Task[Option[Account]]
     def getByPatientId(patientId: Long): Task[Option[Account]]
     def getAll: Task[List[Account]]
+    def update(accountId: Long, op: Account => Account): Task[Account]
 
 class AccountRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends AccountRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -41,6 +42,18 @@ class AccountRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends AccountRep
         run {
             query[Account]
         } // No filter, so it returns all accounts
+
+    override def update(accountId: Long, op: Account => Account): Task[Account] =
+        for {
+            current <- getById(accountId)
+                .someOrFail(new RuntimeException(s"Could not update: missing Account ID: $accountId"))
+            updated <- run {
+                query[Account]
+                    .filter(_.accountId == lift(accountId))
+                    .updateValue(lift(op(current)))
+                    .returning(d => d)
+            }
+        } yield updated
 
 object AccountRepositoryLive:
     val layer = ZLayer {

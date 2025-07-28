@@ -5,6 +5,7 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.* // imports the type class of derivation package
 import com.axiom.patienttracker.http.requests.CreateAccountRequest
 import com.axiom.patienttracker.domain.data.Account
+import com.axiom.patienttracker.http.requests.UpdateAccountRequest
 
 trait AccountEndpoints extends BaseEndpoint:
     val accountEndpoint = baseEndpoint
@@ -47,3 +48,12 @@ trait AccountEndpoints extends BaseEndpoint:
         .get
         .in("accounts")
         .out(jsonBody[List[Account]])
+
+    val updateAccountEndpoint = baseEndpoint
+        .tag("account")
+        .name("updateAccount")
+        .description("Update an existing account")
+        .put
+        .in("account" / path[Long]("accountId"))
+        .in(jsonBody[UpdateAccountRequest])
+        .out(jsonBody[Account])

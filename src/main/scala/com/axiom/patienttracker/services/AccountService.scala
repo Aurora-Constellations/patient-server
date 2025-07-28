@@ -11,7 +11,7 @@ import com.axiom.patienttracker.http.requests.UpdateAccountRequest
 trait AccountService:
     def create(req: CreateAccountRequest): Task[Account]
     def getById(accountId: Long): Task[Option[Account]]
-    def getByPatientId(patientId: Long): Task[Option[Account]]
+    def getByPatientId(patientId: Long): Task[List[Account]]
     def getAll: Task[List[Account]]
     def update(accountId: Long, req: UpdateAccountRequest): Task[Account]
 
@@ -22,7 +22,7 @@ class AccountServiceLive private (repo: AccountRepository) extends AccountServic
     override def getById(accountId: Long): Task[Option[Account]] = 
         repo.getById(accountId)
 
-    override def getByPatientId(patientId: Long): Task[Option[Account]] = 
+    override def getByPatientId(patientId: Long): Task[List[Account]] = 
         repo.getByPatientId(patientId)
 
     override def getAll: Task[List[Account]] = 

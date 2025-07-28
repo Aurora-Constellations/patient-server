@@ -9,7 +9,7 @@ import com.axiom.patienttracker.domain.data.Account
 trait AccountRepository:
     def create(account: Account): Task[Account]
     def getById(accountId: Long): Task[Option[Account]]
-    def getByPatientId(patientId: Long): Task[Option[Account]]
+    def getByPatientId(patientId: Long): Task[List[Account]]
     def getAll: Task[List[Account]]
     def update(accountId: Long, op: Account => Account): Task[Account]
 
@@ -32,11 +32,11 @@ class AccountRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends AccountRep
                 .filter(_.accountId == lift(accountId))
         }.map(_.headOption)
 
-    override def getByPatientId(patientId: Long): Task[Option[Account]] = 
+    override def getByPatientId(patientId: Long): Task[List[Account]] = 
         run {
             query[Account]
                 .filter(_.patientId == lift(patientId))
-        }.map(_.headOption)
+        }
 
     override def getAll: Task[List[Account]] = 
         run {

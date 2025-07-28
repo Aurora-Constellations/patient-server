@@ -38,8 +38,8 @@ trait AccountEndpoints extends BaseEndpoint:
         .name("getAccountByPatientId")
         .description("Get account details by patient ID")
         .get
-        .in("patient" / "account" / path[Long]("patientId"))
-        .out(jsonBody[Option[Account]])
+        .in("account" / "patient" / path[Long]("patientId"))
+        .out(jsonBody[List[Account]])
 
     val getAllAccountsEndpoint = baseEndpoint
         .tag("account")

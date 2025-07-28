@@ -23,3 +23,27 @@ trait AccountEndpoints extends BaseEndpoint:
         .in("account")
         .in(jsonBody[CreateAccountRequest])
         .out(jsonBody[Account])
+
+    val getAccountEndpoint = baseEndpoint
+        .tag("account")
+        .name("getAccount")
+        .description("Get account details")
+        .get
+        .in("account" / path[Long]("accountId"))
+        .out(jsonBody[Option[Account]])
+
+    val getAccountByPatientIdEndpoint = baseEndpoint
+        .tag("account")
+        .name("getAccountByPatientId")
+        .description("Get account details by patient ID")
+        .get
+        .in("patient" / "account" / path[Long]("patientId"))
+        .out(jsonBody[Option[Account]])
+
+    val getAllAccountsEndpoint = baseEndpoint
+        .tag("account")
+        .name("getAllAccounts")
+        .description("Get all accounts")
+        .get
+        .in("accounts")
+        .out(jsonBody[List[Account]])

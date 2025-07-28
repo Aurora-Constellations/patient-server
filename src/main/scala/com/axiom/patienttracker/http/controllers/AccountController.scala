@@ -18,7 +18,22 @@ class AccountController private (service: AccountService) extends BaseController
             req => service.create(req).either
         )
 
-    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount)
+    val getAccount: ServerEndpoint[Any, Task] = getAccountEndpoint
+        .serverLogic[Task](
+            accountId => service.getById(accountId).either
+        )
+
+    val getAccountByPatientId: ServerEndpoint[Any, Task] = getAccountByPatientIdEndpoint
+        .serverLogic[Task](
+            patientId => service.getByPatientId(patientId).either
+        )
+
+    val getAllAccounts: ServerEndpoint[Any, Task] = getAllAccountsEndpoint
+        .serverLogic[Task](
+            _ => service.getAll.either
+        )
+
+    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount, getAccount, getAccountByPatientId, getAllAccounts)
 
 object AccountController:
     val makeZIO = for {

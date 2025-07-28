@@ -14,6 +14,8 @@ trait AccountService:
     def getByPatientId(patientId: Long): Task[List[Account]]
     def getAll: Task[List[Account]]
     def update(accountId: Long, req: UpdateAccountRequest): Task[Account]
+    def delete(accountId: Long): Task[Account]
+    def deleteAllByPatientId(patientId: Long): Task[List[Account]]
 
 class AccountServiceLive private (repo: AccountRepository) extends AccountService:
     override def create(req: CreateAccountRequest): Task[Account] = 
@@ -34,6 +36,14 @@ class AccountServiceLive private (repo: AccountRepository) extends AccountServic
                 repo.update(accountId, existing => applyUpdates(existing, req))
             case None =>
                 ZIO.fail(new NoSuchElementException(s"Account with ID $accountId not found"))
+        }
+
+    override def delete(accountId: Long): Task[Account] =
+        repo.delete(accountId)
+
+    override def deleteAllByPatientId(patientId: Long): Task[List[Account]] =
+        repo.getByPatientId(patientId).flatMap { accounts =>
+            ZIO.foreach(accounts)(account => repo.delete(account.accountId))
         }
 
     private def applyUpdates(existing: Account, update: UpdateAccountRequest): Account =

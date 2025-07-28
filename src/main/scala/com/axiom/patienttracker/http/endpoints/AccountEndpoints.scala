@@ -57,3 +57,19 @@ trait AccountEndpoints extends BaseEndpoint:
         .in("account" / path[Long]("accountId"))
         .in(jsonBody[UpdateAccountRequest])
         .out(jsonBody[Account])
+
+    val deleteAccountEndpoint = baseEndpoint
+        .tag("account")
+        .name("deleteAccount")
+        .description("Delete an existing account")
+        .delete
+        .in("account" / path[Long]("accountId"))
+        .out(jsonBody[Account])
+
+    val deleteAllAccountsEndpoint = baseEndpoint
+        .tag("account")
+        .name("deleteAllAccounts")
+        .description("Delete all accounts with a specific patient ID")
+        .delete
+        .in("accounts" / "deleteAll" / path[Long]("patientId"))
+        .out(jsonBody[List[Account]]) // Assuming you want to return the deleted accounts

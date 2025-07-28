@@ -39,7 +39,17 @@ class AccountController private (service: AccountService) extends BaseController
                 service.update(accountId, req).either
         }
 
-    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount, getAccount, getAccountByPatientId, getAllAccounts, updateAccount)
+    val deleteAccount: ServerEndpoint[Any, Task] = deleteAccountEndpoint
+        .serverLogic[Task](
+            accountId => service.delete(accountId).either
+        )
+
+    val deleteAllAccounts: ServerEndpoint[Any, Task] = deleteAllAccountsEndpoint
+        .serverLogic[Task](
+            patientId => service.deleteAllByPatientId(patientId).either
+        )
+
+    override val routes: List[ServerEndpoint[Any, Task]] = List(account, createAccount, getAccount, getAccountByPatientId, getAllAccounts, updateAccount, deleteAccount, deleteAllAccounts)
 
 object AccountController:
     val makeZIO = for {

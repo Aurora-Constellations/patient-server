@@ -12,6 +12,7 @@ trait AccountRepository:
     def getByPatientId(patientId: Long): Task[List[Account]]
     def getAll: Task[List[Account]]
     def update(accountId: Long, op: Account => Account): Task[Account]
+    def delete(accountId: Long): Task[Account]
 
 class AccountRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends AccountRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -54,6 +55,17 @@ class AccountRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends AccountRep
                     .returning(d => d)
             }
         } yield updated
+
+    override def delete(accountId: Long): Task[Account] =
+        for {
+            account <- getById(accountId)
+                .someOrFail(new RuntimeException(s"Could not delete: missing Account ID: $accountId"))
+            _ <- run {
+                query[Account]
+                    .filter(_.accountId == lift(accountId))
+                    .delete
+            }
+        } yield account
 
 object AccountRepositoryLive:
     val layer = ZLayer {

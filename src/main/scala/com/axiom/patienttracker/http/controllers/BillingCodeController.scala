@@ -22,7 +22,13 @@ class BillingCodeController private (service: BillingCodeService) extends BaseCo
             billingCode => service.getBillingCode(billingCode).either
         }
 
-    override val routes: List[ServerEndpoint[Any, Task]] = List(billingCode, createBillingCode, getBillingCode)
+    val updateBillingCode: ServerEndpoint[Any, Task] = updateBillingCodeEndpoint
+        .serverLogic[Task]{
+            case (billingCode, req) => 
+                service.updateBillingCode(billingCode, req).either
+        }
+
+    override val routes: List[ServerEndpoint[Any, Task]] = List(billingCode, createBillingCode, getBillingCode, updateBillingCode)
 
 object BillingCodeController:
     val makeZIO = for {

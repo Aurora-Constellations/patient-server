@@ -4,6 +4,7 @@ import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.* // imports the type class of derivation package
 import com.axiom.patienttracker.domain.data.BillingCode
+import com.axiom.patienttracker.http.requests.UpdateBillingCodeRequest
 
 trait BillingCodeEndpoints extends BaseEndpoint:
     val billingCodeEndpoint = baseEndpoint
@@ -30,3 +31,12 @@ trait BillingCodeEndpoints extends BaseEndpoint:
         .get
         .in("billingcode" / path[String]("billingCode"))
         .out(jsonBody[Option[BillingCode]])
+
+    val updateBillingCodeEndpoint = baseEndpoint
+        .tag("billing")
+        .name("updateBillingCode")
+        .description("Update an existing billing code")
+        .put
+        .in("billingcode" / path[String]("billingCode"))
+        .in(jsonBody[UpdateBillingCodeRequest])
+        .out(jsonBody[BillingCode])

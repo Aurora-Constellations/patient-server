@@ -9,11 +9,13 @@ import com.axiom.patienttracker.domain.data.DiagnosticCodes.given_SchemaMeta_Dia
 
 trait DiagnosticCodesRepository:
     def create(diagnosticCode: DiagnosticCodes): Task[DiagnosticCodes]
+    def update(code: String, apply: DiagnosticCodes => DiagnosticCodes): Task[DiagnosticCodes]
+    def getByCode(code: String): Task[Option[DiagnosticCodes]]
 
 class DiagnosticCodesRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends DiagnosticCodesRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
 
-    inline given schema: SchemaMeta[DiagnosticCodes] = schemaMeta[DiagnosticCodes]("DiagnosticCodes") // Table name `"DiagnosticCodes"`
+    inline given schema: SchemaMeta[DiagnosticCodes] = schemaMeta[DiagnosticCodes]("diagnosticcodes") // Table name `"DiagnosticCodes"`
    
 
     override def create(diagnosticCode: DiagnosticCodes): Task[DiagnosticCodes] = 
@@ -22,6 +24,22 @@ class DiagnosticCodesRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Di
                 .insertValue(lift(diagnosticCode))
                 .returning(d => d)
         } 
+
+    override def getByCode(code: String): Task[Option[DiagnosticCodes]] =
+    run {
+      query[DiagnosticCodes].filter(_.diagnosticCode == lift(code))
+    }.map(_.headOption)
+
+    override def update(code: String, apply: DiagnosticCodes => DiagnosticCodes): Task[DiagnosticCodes] =
+        for {
+        current <- getByCode(code).someOrFail(new RuntimeException(s"Diagnostic code not found: $code"))
+        updated = apply(current)
+        _ <- run {
+            query[DiagnosticCodes]
+            .filter(_.diagnosticCode == lift(code))
+            .updateValue(lift(updated))
+        }
+        } yield updated
 
 object DiagnosticCodesRepositoryLive:
     val layer = ZLayer {

@@ -3,7 +3,7 @@ package com.axiom.patienttracker.http.endpoints
 import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.* // imports the type class of derivation package
-import com.axiom.patienttracker.http.requests.CreateDiagnosticCodeRequest
+import com.axiom.patienttracker.http.requests.UpdateDiagnosticCodeRequest
 import com.axiom.patienttracker.domain.data.DiagnosticCodes
 
 trait DiagnosticCodeEndpoints extends BaseEndpoint:
@@ -21,5 +21,14 @@ trait DiagnosticCodeEndpoints extends BaseEndpoint:
         .description("Create a new Diagnostic Code")
         .post
         .in("diagnostic")
-        .in(jsonBody[CreateDiagnosticCodeRequest])
+        .in(jsonBody[DiagnosticCodes])
         .out(jsonBody[DiagnosticCodes])
+
+    val updateDiagnosticCodeEndpoint = baseEndpoint
+    .tag("diagnosticCodes")
+    .name("updateDiagnosticCode")
+    .description("Update an existing Diagnostic Code")
+    .put
+    .in("diagnostic" / path[String]("diagnosticCode"))
+    .in(jsonBody[UpdateDiagnosticCodeRequest])
+    .out(jsonBody[DiagnosticCodes])

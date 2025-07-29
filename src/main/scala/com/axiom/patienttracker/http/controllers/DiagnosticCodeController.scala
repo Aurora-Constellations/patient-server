@@ -23,7 +23,9 @@ class DiagnosticCodeController private (service: DiagnosticCodesService)
   updateDiagnosticCodeEndpoint.serverLogic {
     case (code, body) => service.update(code, body).either
   }
-  override val routes: List[ServerEndpoint[Any, Task]] = List(diagnostic, create, update)
+  val delete: ServerEndpoint[Any, Task] =
+  deleteDiagnosticCodeEndpoint.serverLogic(code => service.delete(code).either)
+  override val routes: List[ServerEndpoint[Any, Task]] = List(diagnostic, create, update, delete)
 }
 
 object DiagnosticCodeController:

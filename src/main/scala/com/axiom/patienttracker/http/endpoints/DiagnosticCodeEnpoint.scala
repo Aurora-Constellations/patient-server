@@ -20,7 +20,7 @@ trait DiagnosticCodeEndpoints extends BaseEndpoint:
         .name("createDiagnosticCode")
         .description("Create a new Diagnostic Code")
         .post
-        .in("diagnostic")
+        .in("diagnostic"/ "create")
         .in(jsonBody[DiagnosticCodes])
         .out(jsonBody[DiagnosticCodes])
 
@@ -29,6 +29,14 @@ trait DiagnosticCodeEndpoints extends BaseEndpoint:
     .name("updateDiagnosticCode")
     .description("Update an existing Diagnostic Code")
     .put
-    .in("diagnostic" / path[String]("diagnosticCode"))
+    .in("diagnostic" / "update" / path[String]("diagnosticCode"))
     .in(jsonBody[UpdateDiagnosticCodeRequest])
+    .out(jsonBody[DiagnosticCodes])
+
+    val deleteDiagnosticCodeEndpoint = baseEndpoint
+    .tag("diagnosticCodes")
+    .name("deleteDiagnosticCode")
+    .description("Delete a diagnostic code by code")
+    .delete
+    .in("diagnostic" /"delete" / path[String]("diagnosticCode"))
     .out(jsonBody[DiagnosticCodes])

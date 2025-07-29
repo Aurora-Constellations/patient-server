@@ -8,6 +8,8 @@
     trait DiagnosticCodesService:
         def create(req: DiagnosticCodes): Task[DiagnosticCodes]
         def update(code: String, req: UpdateDiagnosticCodeRequest): Task[DiagnosticCodes]
+        def delete(code: String): Task[DiagnosticCodes]
+
     class DiagnosticCodeServiceLive private (repo: DiagnosticCodesRepository) extends DiagnosticCodesService:
         override def create(req: DiagnosticCodes): Task[DiagnosticCodes] =
             repo.create(req)
@@ -19,6 +21,10 @@
                 description = req.description.getOrElse(existing.description)
             )
         )
+
+        override def delete(code: String): Task[DiagnosticCodes] =
+            repo.delete(code)
+
 
     object DiagnosticCodeServiceLive:
         val layer: ZLayer[DiagnosticCodesRepository, Nothing, DiagnosticCodesService] =

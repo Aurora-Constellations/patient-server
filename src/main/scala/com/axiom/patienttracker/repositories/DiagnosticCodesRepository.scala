@@ -11,6 +11,7 @@ trait DiagnosticCodesRepository:
     def create(diagnosticCode: DiagnosticCodes): Task[DiagnosticCodes]
     def update(code: String, apply: DiagnosticCodes => DiagnosticCodes): Task[DiagnosticCodes]
     def getByCode(code: String): Task[Option[DiagnosticCodes]]
+    def delete(code: String): Task[DiagnosticCodes]
 
 class DiagnosticCodesRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends DiagnosticCodesRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -40,6 +41,17 @@ class DiagnosticCodesRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Di
             .updateValue(lift(updated))
         }
         } yield updated
+    
+    override def delete(code: String): Task[DiagnosticCodes] =
+        for {
+            existing <- getByCode(code).someOrFail(new RuntimeException(s"Diagnostic code not found: $code"))
+            _ <- run {
+            query[DiagnosticCodes]
+                .filter(_.diagnosticCode == lift(code))
+                .delete
+            }
+        } yield existing
+
 
 object DiagnosticCodesRepositoryLive:
     val layer = ZLayer {

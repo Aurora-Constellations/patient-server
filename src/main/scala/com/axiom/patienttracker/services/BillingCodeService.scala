@@ -10,6 +10,7 @@ import com.axiom.patienttracker.http.requests.UpdateBillingCodeRequest
 trait BillingCodeService:
     def create(req: BillingCode): Task[BillingCode]
     def getBillingCode(billingCode: String): Task[Option[BillingCode]]
+    def getAllBillingCodes(): Task[List[BillingCode]]
     def updateBillingCode(billingCode: String, req: UpdateBillingCodeRequest): Task[BillingCode]
 
 class BillingCodeServiceLive private (repo: BillingCodeRepository) extends BillingCodeService:
@@ -18,6 +19,9 @@ class BillingCodeServiceLive private (repo: BillingCodeRepository) extends Billi
 
     override def getBillingCode(billingCode: String): Task[Option[BillingCode]] = 
         repo.getBillingCode(billingCode)
+
+    override def getAllBillingCodes(): Task[List[BillingCode]] = 
+        repo.getAllBillingCodes()
 
     override def updateBillingCode(billingCode: String, req: UpdateBillingCodeRequest): Task[BillingCode] = 
         repo.updateBillingCode(billingCode, existing => applyUpdates(existing, req))

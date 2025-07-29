@@ -9,6 +9,7 @@ import com.axiom.patienttracker.domain.data.BillingCode
 trait BillingCodeRepository:
     def create(billingCode: BillingCode): Task[BillingCode]
     def getBillingCode(billingCode: String): Task[Option[BillingCode]]
+    def getAllBillingCodes(): Task[List[BillingCode]]
     def updateBillingCode(billingCode: String, op: BillingCode => BillingCode): Task[BillingCode]
 
 class BillingCodeRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends BillingCodeRepository:
@@ -29,6 +30,11 @@ class BillingCodeRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Billin
             query[BillingCode]
                 .filter(_.billingCode == lift(billingCode))
         }.map(_.headOption) // Returns the first element wrapped in an Option
+
+    override def getAllBillingCodes(): Task[List[BillingCode]] =
+        run {
+            query[BillingCode]
+        } // Returns all billing codes
     
     override def updateBillingCode(billingCode: String, op: BillingCode => BillingCode): Task[BillingCode] =
         for {

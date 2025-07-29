@@ -12,6 +12,7 @@ trait BillingCodeService:
     def getBillingCode(billingCode: String): Task[Option[BillingCode]]
     def getAllBillingCodes(): Task[List[BillingCode]]
     def updateBillingCode(billingCode: String, req: UpdateBillingCodeRequest): Task[BillingCode]
+    def deleteBillingCode(billingCode: String): Task[BillingCode]
 
 class BillingCodeServiceLive private (repo: BillingCodeRepository) extends BillingCodeService:
     override def create(req: BillingCode): Task[BillingCode] = 
@@ -25,6 +26,9 @@ class BillingCodeServiceLive private (repo: BillingCodeRepository) extends Billi
 
     override def updateBillingCode(billingCode: String, req: UpdateBillingCodeRequest): Task[BillingCode] = 
         repo.updateBillingCode(billingCode, existing => applyUpdates(existing, req))
+
+    override def deleteBillingCode(billingCode: String): Task[BillingCode] = 
+        repo.deleteBillingCode(billingCode)
 
     private def applyUpdates(existing: BillingCode, update: UpdateBillingCodeRequest): BillingCode =
         existing.copy(

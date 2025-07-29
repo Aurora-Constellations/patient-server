@@ -32,6 +32,14 @@ trait BillingCodeEndpoints extends BaseEndpoint:
         .in("billingcode" / path[String]("billingCode"))
         .out(jsonBody[Option[BillingCode]])
 
+    val getAllBillingCodesEndpoint = baseEndpoint
+        .tag("billing")
+        .name("getAllBillingCodes")
+        .description("Get all billing codes")
+        .get
+        .in("billingcodes")
+        .out(jsonBody[List[BillingCode]])
+
     val updateBillingCodeEndpoint = baseEndpoint
         .tag("billing")
         .name("updateBillingCode")
@@ -40,3 +48,11 @@ trait BillingCodeEndpoints extends BaseEndpoint:
         .in("billingcode" / path[String]("billingCode"))
         .in(jsonBody[UpdateBillingCodeRequest])
         .out(jsonBody[BillingCode])
+
+    val deleteBillingCodeEndpoint = baseEndpoint
+        .tag("billing")
+        .name("deleteBillingCode")
+        .description("Delete a billing code by code")
+        .delete
+        .in("billingcode" / path[String]("billingCode"))
+        .out(jsonBody[BillingCode]) // Returns the deleted billing code

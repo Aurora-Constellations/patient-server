@@ -10,20 +10,25 @@ import com.axiom.patienttracker.http.requests.UpdateDoctorRequest
 // in between the HTTP layer and the Database layer
 trait DoctorService:
     def create(req: CreateDoctorRequest): Task[Doctor]
+    def getByProviderId(providerId: String): Task[Option[Doctor]]
+    def getAllDoctors(): Task[List[Doctor]]
     def update(req: UpdateDoctorRequest): Task[Doctor]
     def delete(providerId: String): Task[Doctor] 
-    
 
 
 class DoctorServiceLive private (repo: DoctorRepository) extends DoctorService:
     override def create(req: CreateDoctorRequest): Task[Doctor] = 
         repo.create(req.toDoctor(-1L))
 
-    private def applyUpdates(existing: Doctor, update: UpdateDoctorRequest): Doctor =
-        existing.copy(
-        name = update.name.getOrElse(existing.name)
-        
-        )
+    override def getByProviderId(providerId: String): Task[Option[Doctor]] = 
+        repo.getByProviderId(providerId).flatMap {
+            case Some(doctor) => ZIO.succeed(Some(doctor))
+            case None => ZIO.fail(new RuntimeException(s"No doctor found for providerId: $providerId"))
+        }
+
+    override def getAllDoctors(): Task[List[Doctor]] =
+        repo.getAllDoctors()
+    
     override def update(req: UpdateDoctorRequest): Task[Doctor] = 
         req.providerId match
         case Some(id) =>
@@ -32,8 +37,12 @@ class DoctorServiceLive private (repo: DoctorRepository) extends DoctorService:
             ZIO.fail(new RuntimeException("Missing providerId in update request"))
     
     override def delete(providerId: String): Task[Doctor] =
-    repo.delete(providerId)
+        repo.delete(providerId)
 
+    private def applyUpdates(existing: Doctor, update: UpdateDoctorRequest): Doctor =
+        existing.copy(
+            name = update.name.getOrElse(existing.name)
+        )
 
 object DoctorServiceLive:
     val layer = ZLayer{

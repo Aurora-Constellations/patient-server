@@ -17,14 +17,29 @@ class DoctorController private (service: DoctorService) extends BaseController w
         .serverLogic[Task](
             req => service.create(req).either
         )
-    val updateDoctor: ServerEndpoint[Any, Task]= updateDoctorEndpoint.serverLogic{ case (providerIdFromPath, body) =>
-            val fullRequest = body.copy(providerId = Some(providerIdFromPath))
-            service.update(fullRequest).either
+
+    val getByProviderId: ServerEndpoint[Any, Task] = getDoctorByProviderIdEndpoint
+        .serverLogic[Task] { 
+            providerId => service.getByProviderId(providerId).either
         }
-    val deleteDoctor: ServerEndpoint[Any, Task] = deleteDoctorEndpoint.serverLogic { providerId =>
-        service.delete(providerId).either
-    }
-    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor, updateDoctor,deleteDoctor )
+    
+    val getAllDoctors: ServerEndpoint[Any, Task] = getAllDoctorsEndpoint
+        .serverLogic[Task] {
+            _ => service.getAllDoctors().either
+        }
+
+    val updateDoctor: ServerEndpoint[Any, Task]= updateDoctorEndpoint
+        .serverLogic[Task]{ 
+            case (providerIdFromPath, body) =>
+                val fullRequest = body.copy(providerId = Some(providerIdFromPath))
+                service.update(fullRequest).either
+        }
+
+    val deleteDoctor: ServerEndpoint[Any, Task] = deleteDoctorEndpoint
+        .serverLogic[Task] { 
+            providerId => service.delete(providerId).either
+        }
+    override val routes: List[ServerEndpoint[Any, Task]] = List(doctor, createDoctor, getByProviderId, getAllDoctors, updateDoctor, deleteDoctor)
 
 object DoctorController:
     val makeZIO = for{

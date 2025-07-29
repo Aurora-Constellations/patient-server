@@ -25,7 +25,23 @@ trait DoctorEndpoints extends BaseEndpoint:
         .in("doctor")
         .in(jsonBody[CreateDoctorRequest])
         .out(jsonBody[Doctor])
-    
+
+    val getDoctorByProviderIdEndpoint = baseEndpoint
+        .tag("doctor")
+        .name("getDoctor")
+        .description("Get a doctor by provider ID")
+        .get
+        .in("doctor" / path[String]("providerId"))
+        .out(jsonBody[Option[Doctor]])
+
+    val getAllDoctorsEndpoint = baseEndpoint
+        .tag("doctor")
+        .name("getAllDoctors")
+        .description("Get all doctors")
+        .get
+        .in("doctors")
+        .out(jsonBody[List[Doctor]])
+
     val updateDoctorEndpoint = baseEndpoint
         .tag("doctors")
         .name("update")
@@ -36,9 +52,9 @@ trait DoctorEndpoints extends BaseEndpoint:
         .out(jsonBody[Doctor])
 
     val deleteDoctorEndpoint = baseEndpoint
-    .tag("doctor")
-    .name("delete")
-    .description("delete the doctor record")
-    .delete
-    .in("doctor" / "delete" / path[String]("providerId"))
-    .out(jsonBody[Doctor])
+        .tag("doctor")
+        .name("delete")
+        .description("delete the doctor record")
+        .delete
+        .in("doctor" / "delete" / path[String]("providerId"))
+        .out(jsonBody[Doctor])

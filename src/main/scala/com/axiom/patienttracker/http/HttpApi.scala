@@ -14,8 +14,9 @@ object HttpApi:
         doctors <- DoctorController.makeZIO
         accounts <- AccountController.makeZIO
         billingCodes <- BillingCodeController.makeZIO
+        encounters <- EncounterController.makeZIO
         // Keep adding controllers here
-    } yield List(patients, reports, users, files, doctors, accounts, billingCodes)
+    } yield List(patients, reports, users, files, doctors, accounts, billingCodes, encounters)
 
     val endpointsZIO = makeControllers.map(gatherRoutes)
 

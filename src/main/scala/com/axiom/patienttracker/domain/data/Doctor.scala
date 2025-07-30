@@ -2,6 +2,7 @@ package com.axiom.patienttracker.domain.data
 
 import zio.json.JsonCodec
 import zio.json.DeriveJsonCodec
+import io.getquill.*
 
 final case class Doctor(
     doctorId: Long,

@@ -16,7 +16,7 @@ trait DiagnosticCodesRepository:
 class DiagnosticCodesRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends DiagnosticCodesRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
 
-    inline given schema: SchemaMeta[DiagnosticCodes] = schemaMeta[DiagnosticCodes]("diagnosticcodes") // Table name `"DiagnosticCodes"`
+    inline given schema: SchemaMeta[DiagnosticCodes] = schemaMeta[DiagnosticCodes]("diagnostic_codes") // Table name `"diagnostic_codes"`
    
 
     override def create(diagnosticCode: DiagnosticCodes): Task[DiagnosticCodes] = 

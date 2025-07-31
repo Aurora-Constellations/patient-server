@@ -12,11 +12,38 @@ class EncounterController private (service: EncounterService) extends BaseContro
         .serverLogicSuccess[Task](_ => ZIO.succeed("All set!"))
 
     val createEncounter: ServerEndpoint[Any, Task] = createEncounterEndpoint
-        .serverLogicSuccess { 
-            request => service.create(request)
+        .serverLogic[Task] { 
+            request => service.create(request).either
         }
 
-    override val routes: List[ServerEndpoint[Any, Task]] = List(encounter, createEncounter)
+    val getEncounterById: ServerEndpoint[Any, Task] = getEncounterByIdEndpoint
+        .serverLogic[Task] {
+            encounterId => service.getById(encounterId).either
+        }
+
+    val getAllEncounters: ServerEndpoint[Any, Task] = getAllEncountersEndpoint
+        .serverLogic[Task] {
+            _ => service.getAll().either
+        }
+
+    val getEncounterByAccountId: ServerEndpoint[Any, Task] = getEncounterByAccountIdEndpoint
+        .serverLogic[Task] {
+            accountId => service.getByAccountId(accountId).either
+        }
+
+    val getEncounterByDoctorId: ServerEndpoint[Any, Task] = getEncounterByDoctorIdEndpoint
+        .serverLogic[Task] {
+            doctorId => service.getByDoctorId(doctorId).either
+        }
+
+    val getByAccountAndDoctorId: ServerEndpoint[Any, Task] = getByAccountAndDoctorIdEndpoint
+        .serverLogic[Task] {
+            (accountId, doctorId) => service.getByADId(accountId, doctorId).either
+        }
+
+    override val routes: List[ServerEndpoint[Any, Task]] = List(encounter,
+        createEncounter, getEncounterById, getAllEncounters, getEncounterByAccountId,
+        getEncounterByDoctorId, getByAccountAndDoctorId)
 
 object EncounterController  :
     val makeZIO = for {

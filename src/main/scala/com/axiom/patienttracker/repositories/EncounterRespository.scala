@@ -10,6 +10,11 @@ import com.axiom.patienttracker.domain.data.Encounter
 
 trait EncounterRepository:
     def create(encounter: Encounter): Task[Encounter]
+    def getById(encounterId: Long): Task[Option[Encounter]]
+    def getAll(): Task[List[Encounter]]
+    def getByAccountId(accountId: Long): Task[List[Encounter]]
+    def getByDoctorId(doctorId: Long): Task[List[Encounter]]
+    def getByADId(accountId: Long, doctorId: Long): Task[List[Encounter]]
 
 class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends EncounterRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -24,6 +29,35 @@ class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Encounte
                 .insertValue(lift(encounter))
                 .returning(d => d)
         } // During complilation we can see the type safe query
+
+    override def getById(encounterId: Long): Task[Option[Encounter]] = 
+        run {
+            query[Encounter]
+                .filter(_.encounterId == lift(encounterId))
+        }.map(_.headOption) // Returns a list, we take the first element or None if empty
+
+    override def getAll(): Task[List[Encounter]] = 
+        run {
+            query[Encounter]
+        } // Returns a list of all encounters
+
+    override def getByAccountId(accountId: Long): Task[List[Encounter]] = 
+        run {
+            query[Encounter]
+                .filter(_.accountId == lift(accountId))
+        }
+
+    override def getByDoctorId(doctorId: Long): Task[List[Encounter]] = 
+        run {
+            query[Encounter]
+                .filter(_.doctorId == lift(doctorId))
+        }
+
+    override def getByADId(accountId: Long, doctorId: Long): Task[List[Encounter]] = 
+        run {
+            query[Encounter]
+                .filter(e => e.accountId == lift(accountId) && e.doctorId == lift(doctorId))
+        }
 
 object EncounterRepositoryLive:
     val layer = ZLayer {

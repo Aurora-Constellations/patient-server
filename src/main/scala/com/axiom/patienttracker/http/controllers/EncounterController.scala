@@ -41,9 +41,14 @@ class EncounterController private (service: EncounterService) extends BaseContro
             (accountId, doctorId) => service.getByADId(accountId, doctorId).either
         }
 
+    val updateEncounter: ServerEndpoint[Any, Task] = updateEncounterEndpoint
+        .serverLogic[Task] {
+            case (encounterId, req) => service.update(encounterId, req).either
+        }
+
     override val routes: List[ServerEndpoint[Any, Task]] = List(encounter,
         createEncounter, getEncounterById, getAllEncounters, getEncounterByAccountId,
-        getEncounterByDoctorId, getByAccountAndDoctorId)
+        getEncounterByDoctorId, getByAccountAndDoctorId, updateEncounter)
 
 object EncounterController  :
     val makeZIO = for {

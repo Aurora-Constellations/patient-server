@@ -10,8 +10,8 @@ final case class Encounter(
     accountId: Long,
     doctorId: Long,
     startDate: LocalDateTime,
-    endDate: Option[LocalDateTime],
-    auroraFileContent: Option[Array[Byte]]
+    endDate: Option[LocalDateTime] = None,
+    auroraFileContent: Option[Array[Byte]] = None
 )
 
 object Encounter {

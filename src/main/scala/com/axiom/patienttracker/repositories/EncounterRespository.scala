@@ -15,6 +15,7 @@ trait EncounterRepository:
     def getByAccountId(accountId: Long): Task[List[Encounter]]
     def getByDoctorId(doctorId: Long): Task[List[Encounter]]
     def getByADId(accountId: Long, doctorId: Long): Task[List[Encounter]]
+    def update(encounterId: Long, op: Encounter => Encounter): Task[Encounter]
 
 class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends EncounterRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -58,6 +59,18 @@ class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Encounte
             query[Encounter]
                 .filter(e => e.accountId == lift(accountId) && e.doctorId == lift(doctorId))
         }
+
+    override def update(encounterId: Long, op: Encounter => Encounter): Task[Encounter] = 
+        for {
+            current <- getById(encounterId)
+                .someOrFail(new RuntimeException(s"Could not update: missing Encounter ID: $encounterId"))
+            updated <- run {
+                query[Encounter]
+                    .filter(_.encounterId == lift(encounterId))
+                    .updateValue(lift(op(current)))
+                    .returning(d => d)
+            }
+        } yield updated
 
 object EncounterRepositoryLive:
     val layer = ZLayer {

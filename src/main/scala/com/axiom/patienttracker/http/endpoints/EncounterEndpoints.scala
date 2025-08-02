@@ -73,3 +73,11 @@ trait EncounterEndpoints extends BaseEndpoint:
         .put
         .in(jsonBody[UpdateEncounterRequest])
         .out(jsonBody[Encounter])
+
+    val deleteEncounterEndpoint = baseEndpoint
+        .tag("encounter")
+        .name("deleteEncounter")
+        .description("Delete Encounter by encounter ID")
+        .delete
+        .in("encounter" / path[Long]("encounterId"))
+        .out(jsonBody[Encounter])

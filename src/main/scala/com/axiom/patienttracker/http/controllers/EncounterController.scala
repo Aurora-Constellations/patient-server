@@ -46,9 +46,14 @@ class EncounterController private (service: EncounterService) extends BaseContro
             case (encounterId, req) => service.update(encounterId, req).either
         }
 
+    val deleteEncounter: ServerEndpoint[Any, Task] = deleteEncounterEndpoint
+        .serverLogic[Task] {
+            encounterId => service.delete(encounterId).either
+        }
+
     override val routes: List[ServerEndpoint[Any, Task]] = List(encounter,
         createEncounter, getEncounterById, getAllEncounters, getEncounterByAccountId,
-        getEncounterByDoctorId, getByAccountAndDoctorId, updateEncounter)
+        getEncounterByDoctorId, getByAccountAndDoctorId, updateEncounter, deleteEncounter)
 
 object EncounterController  :
     val makeZIO = for {

@@ -16,6 +16,7 @@ trait EncounterService:
     def getByDoctorId(doctorId: Long): Task[List[Encounter]]
     def getByADId(accountId: Long, doctorId: Long): Task[List[Encounter]]
     def update(encounterId: Long, req: UpdateEncounterRequest): Task[Encounter]
+    def delete(encounterId: Long): Task[Encounter]
 
 class EncounterServiceLive private (repo: EncounterRepository) extends EncounterService:
     override def create(req: CreateEncounterRequest): Task[Encounter] = 
@@ -46,6 +47,9 @@ class EncounterServiceLive private (repo: EncounterRepository) extends Encounter
             case None =>
                 ZIO.fail(new NoSuchElementException(s"Account with ID $encounterId not found"))
         }
+
+    override def delete(encounterId: Long): Task[Encounter] = 
+        repo.delete(encounterId)
 
     private def applyUpdates(existing: Encounter, update: UpdateEncounterRequest): Encounter =
         existing.copy(

@@ -16,6 +16,7 @@ trait EncounterRepository:
     def getByDoctorId(doctorId: Long): Task[List[Encounter]]
     def getByADId(accountId: Long, doctorId: Long): Task[List[Encounter]]
     def update(encounterId: Long, op: Encounter => Encounter): Task[Encounter]
+    def delete(encounterId: Long): Task[Encounter]
 
 class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends EncounterRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -71,6 +72,18 @@ class EncounterRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends Encounte
                     .returning(d => d)
             }
         } yield updated
+
+    override def delete(encounterId: Long): Task[Encounter] = 
+        for {
+            encounter <- getById(encounterId)
+                .someOrFail(new RuntimeException(s"Could not delete: missing Encounter ID: $encounterId"))
+            _ <- run {
+                query[Encounter]
+                    .filter(_.encounterId == lift(encounterId))
+                    .delete
+            }
+        } yield encounter
+
 
 object EncounterRepositoryLive:
     val layer = ZLayer {

@@ -4,4 +4,6 @@ addSbtPlugin("com.github.sbt"     % "sbt-native-packager"      % "1.9.11")
 addSbtPlugin("ch.epfl.scala"      % "sbt-scalafix"             % "0.10.3")
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"              % "1.13.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.34+5-5dfe5fb6-SNAPSHOT")
+resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 addDependencyTreePlugin

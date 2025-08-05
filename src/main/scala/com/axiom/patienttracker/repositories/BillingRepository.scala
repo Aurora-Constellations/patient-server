@@ -10,6 +10,7 @@ import com.axiom.patienttracker.domain.data.Billing
 
 trait BillingRepository:
     def create(billings: Billing): Task[Billing]
+    def getById(encounterId: Long): Task[Option[Billing]]
 
 class BillingRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends BillingRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -24,6 +25,12 @@ class BillingRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends BillingRep
                 .insertValue(lift(billings))
                 .returning(d => d)
         } // During complilation we can see the type safe query
+
+    override def getById(billingId: Long): Task[Option[Billing]] = 
+        run {
+            query[Billing]
+                .filter(_.billingId == lift(billingId))
+        }.map(_.headOption) // Returns a list, we take the first element or None if empty
 
 object BillingRepositoryLive:
     val layer = ZLayer {

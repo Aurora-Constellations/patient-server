@@ -17,8 +17,13 @@ class BillingController private (service: BillingService) extends BaseController
     .serverLogic[Task] { 
       request => service.create(request).either
     }
+  
+  val getBillingById: ServerEndpoint[Any, Task] = getBillingByIdEndpoint
+        .serverLogic[Task] {
+            billingId => service.getById(billingId).either
+        }
 
-  override val routes: List[ServerEndpoint[Any, Task]] = List(billingHealth, createBilling)
+  override val routes: List[ServerEndpoint[Any, Task]] = List(billingHealth, createBilling, getBillingById)
 
 object BillingController:
     val makeZIO = for {

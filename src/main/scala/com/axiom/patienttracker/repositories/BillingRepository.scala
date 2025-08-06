@@ -11,6 +11,9 @@ import com.axiom.patienttracker.domain.data.Billing
 trait BillingRepository:
     def create(billings: Billing): Task[Billing]
     def getById(encounterId: Long): Task[Option[Billing]]
+    def getAll(): Task[List[Billing]]
+    def update(billingId: Long, op: Billing => Billing): Task[Billing]
+    def delete(billingId: Long): Task[Billing]
 
 class BillingRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends BillingRepository:
     import quill.* //gives us access to methods such as run, query, filter or lift
@@ -31,6 +34,34 @@ class BillingRepositoryLive(quill: Quill.Postgres[SnakeCase]) extends BillingRep
             query[Billing]
                 .filter(_.billingId == lift(billingId))
         }.map(_.headOption) // Returns a list, we take the first element or None if empty
+
+    override def getAll(): Task[List[Billing]] = 
+        run {
+            query[Billing]
+        } // Returns a list of all Billings
+
+    override def update(billingId: Long, op: Billing => Billing): Task[Billing] = 
+        for {
+            current <- getById(billingId)
+                .someOrFail(new RuntimeException(s"Could not update: missing Billing ID: $billingId"))
+            updated <- run {
+                query[Billing]
+                    .filter(_.billingId == lift(billingId))
+                    .updateValue(lift(op(current)))
+                    .returning(d => d)
+            }
+        } yield updated
+
+    override def delete(billingId: Long): Task[Billing] = 
+        for {
+            billing <- getById(billingId)
+                .someOrFail(new RuntimeException(s"Could not delete: missing Billing ID: $billingId"))
+            _ <- run {
+                query[Billing]
+                    .filter(_.billingId == lift(billingId))
+                    .delete
+            }
+        } yield billing
 
 object BillingRepositoryLive:
     val layer = ZLayer {

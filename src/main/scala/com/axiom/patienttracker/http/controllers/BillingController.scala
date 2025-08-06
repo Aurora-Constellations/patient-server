@@ -23,7 +23,22 @@ class BillingController private (service: BillingService) extends BaseController
             billingId => service.getById(billingId).either
         }
 
-  override val routes: List[ServerEndpoint[Any, Task]] = List(billingHealth, createBilling, getBillingById)
+  val getAllBilling: ServerEndpoint[Any, Task] = getAllBillingEndpoint
+        .serverLogic[Task] {
+            _ => service.getAll().either
+        }
+  
+  val updateBilling: ServerEndpoint[Any, Task] = updateBillingEndpoint
+        .serverLogic[Task] {
+            case (billingId, req) => service.update(billingId, req).either
+        }
+
+  val deleteBilling: ServerEndpoint[Any, Task] = deleteBillingEndpoint
+        .serverLogic[Task] {
+            billingId => service.delete(billingId).either
+        }
+
+  override val routes: List[ServerEndpoint[Any, Task]] = List(billingHealth, createBilling, getBillingById, getAllBilling, updateBilling, deleteBilling )
 
 object BillingController:
     val makeZIO = for {

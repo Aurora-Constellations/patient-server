@@ -23,10 +23,10 @@ object PatientRepositorySpec extends ZIOSpecDefault:
                 val date = stringToDate("2024-08-21")
                 val program = for{
                     repo <- ZIO.service[PatientRepository]
-                    patient <- repo.create(Patient(1L, "TB00202100","testing", "the jvm", "male", stringToDate("2024-08-21")))
+                    patient <- repo.create(Patient(1L, "TB309089/23","TB00202100","testing", "the jvm", "male", Some(stringToDate("2024-08-21"))))
                 }yield patient
                 program.assert{
-                    case Patient(_, "TB00202100","testing", "the jvm", "male", date, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => true
+                    case Patient(_, "TB309089/23", "TB00202100", "testing", "the jvm", "male", Some(date), _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => true
                     case _ => false
                 }
         ).provide(
@@ -56,9 +56,9 @@ object PatientRepositorySpec extends ZIOSpecDefault:
         dataSource
 
     // use the DataSource (as a ZLayer) to build the Quill instance (as a ZLayer)
-    val dataSourceLayer = ZLayer{
+    val dataSourceLayer = ZLayer.scoped {
         for{
-            container <- ZIO.acquireRelease(ZIO.attempt(createContainer()))(container => ZIO.attempt(container.stop())).ignoreLogged
+            container <- ZIO.acquireRelease(ZIO.attempt(createContainer()))(container => ZIO.attempt(container.stop()).ignoreLogged)
             dataSource <- ZIO.attempt(createDataSource(container))
         }yield dataSource
     }

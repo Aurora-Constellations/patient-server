@@ -32,16 +32,26 @@ object PatientServiceSpec extends ZIOSpecDefault:
                 ZIO.succeed(db.get(id))
             override def getByUnitNumber(unitNumber: String): Task[Option[Patient]] = 
                 ZIO.succeed(db.values.find(_.unitNumber == unitNumber))
-            override def update(id: Long, op: Patient => Patient): Task[Patient] = 
-                ZIO.attempt:
-                    val patient = db(id) // can crash
-                    db += (id -> op(patient))
-                    patient
-            override def delete(id: Long): Task[Patient] = 
+            override def update(unitNumber: String, op: Patient => Patient): Task[Patient] = 
+                ZIO.attempt {
+                    db.values.find(_.unitNumber == unitNumber) match {
+                        case Some(patient) =>
+                            val updatedPatient = op(patient)
+                            db += (patient.id -> updatedPatient)
+                            updatedPatient
+                        case None =>
+                            throw new NoSuchElementException(s"Patient with unitNumber $unitNumber not found")
+                    }
+                }
+            override def delete(unitNumber: String): Task[Patient] = 
                 ZIO.attempt{
-                    val patient = db(id)
-                    db -= id
-                    patient
+                    db.values.find(_.unitNumber == unitNumber) match {
+                        case Some(patient) =>
+                            db -= patient.id
+                            patient
+                        case None =>
+                            throw new NoSuchElementException(s"Patient with unitNumber $unitNumber not found")
+                    }
                 }
         }
     )
@@ -53,13 +63,14 @@ object PatientServiceSpec extends ZIOSpecDefault:
     override def spec: Spec[TestEnvironment & Scope, Any] = 
         suite("Patient service test")(
             test("create patient"):
-                val patientZIO = service(_.create(CreatePatientRequest("TB00202100","testing", "the jvm", "male", stringToDate("2024-08-21"))))
+                val patientZIO = service(_.create(CreatePatientRequest("TB309089/23","TB00202100","testing", "the jvm", "male", Some(stringToDate("2024-08-21")))))
                 patientZIO.assert{patient =>
+                    patient.accountNumber == "TB309089/23" &&
                     patient.unitNumber == "TB00202100" &&
                     patient.firstName == "testing" &&
                     patient.lastName == "the jvm" &&
                     patient.sex == "male" &&
-                    patient.dob == stringToDate("2024-08-21")
+                    patient.dob == Some(stringToDate("2024-08-21"))
                 }
         ).provide(
             PatientServiceLive.layer,
